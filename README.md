@@ -1,2 +1,2 @@
 # Group2Checkers
-Please disregard the chess Repository this is the proper one
+Code and issues will go here
