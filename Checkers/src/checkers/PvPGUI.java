@@ -16,6 +16,17 @@ public class PvPGUI {
         pic.setIcon(icon);
         board.add(pic);
         pvpGUI.add(board);
-        pvpGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //pvpGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pvpGUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        pvpGUI.addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent)
+            {
+                CheckersGUI gui1 = new CheckersGUI();
+                pvpGUI.dispose();
+            }
+        });
     }
 }

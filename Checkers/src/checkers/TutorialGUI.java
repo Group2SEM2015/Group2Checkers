@@ -38,8 +38,17 @@ public class TutorialGUI {
         tutorial.add(menuBar, BorderLayout.NORTH);
         
         
-        tutorial.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-    }
+        //tutorial.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        tutorial.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        tutorial.addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent)
+            {
+                CheckersGUI gui1 = new CheckersGUI();
+                tutorial.dispose();
+            }
+        });      
+    }
 }

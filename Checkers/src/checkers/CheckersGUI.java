@@ -15,7 +15,7 @@ public class CheckersGUI {
         tutorialButton = new JButton("Tutorial");
         pvpButton = new JButton("Player Vs. Player");
         pveButton = new JButton("Player Vs. Computer");
-        start.setSize(300,400);
+        start.setSize(600,400);
         start.setLayout(new GridLayout(3,1));
         start.setVisible(true);
         
@@ -23,7 +23,7 @@ public class CheckersGUI {
         start.add(pvpButton);
         start.add(pveButton);
         
-        start.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        start.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //actionlistener for Tutorial Button
         tutorialButton.addActionListener(new ActionListener(){
             @Override
