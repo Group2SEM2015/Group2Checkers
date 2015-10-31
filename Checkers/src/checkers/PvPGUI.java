@@ -11,7 +11,7 @@ public class PvPGUI {
         pvpGUI = new JFrame("Player Vs. Player");
         pvpGUI.setSize(900,700);
         pvpGUI.setVisible(true);
-        
+        //sets image to Jlabel
         ImageIcon icon = new ImageIcon(new ImageIcon("Images/checkers_board.png").getImage().getScaledInstance(700, 600, Image.SCALE_DEFAULT));
         pic.setIcon(icon);
         board.add(pic);

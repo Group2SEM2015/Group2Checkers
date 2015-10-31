@@ -19,6 +19,7 @@ public class TutorialGUI {
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
     public TutorialGUI (){
+        //sets image to JLabel
        ImageIcon icon = new ImageIcon(new ImageIcon("Images/checkers_board.png").getImage().getScaledInstance(700, 600, Image.SCALE_DEFAULT));
        pic.setIcon(icon);
         

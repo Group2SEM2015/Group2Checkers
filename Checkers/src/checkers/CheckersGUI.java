@@ -24,7 +24,7 @@ public class CheckersGUI {
         start.add(pveButton);
         
         start.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        
+        //actionlistener for Tutorial Button
         tutorialButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -33,7 +33,7 @@ public class CheckersGUI {
             }
             
         });
-        
+        //actionlistener for PvPButton Button
         pvpButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -42,7 +42,7 @@ public class CheckersGUI {
             }
             
         });
-        
+        //actionlistener for PvEButton Button
         pveButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
