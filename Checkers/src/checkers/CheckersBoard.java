@@ -11,6 +11,10 @@ package checkers;
  */
 public class CheckersBoard {
     final int BOARDEDGE = 8;
+    final int NW = 1;
+    final int NE = 2;
+    final int SE = 3;
+    final int SW = 4;
     private int[][] board = new int[BOARDEDGE][BOARDEDGE];
     
     /**
@@ -30,32 +34,32 @@ public class CheckersBoard {
                 if(y%2 == 0){
                     if(y < 3){
                         if(x%2 == 1){
-                            board[y][x] = 3;
+                            board[x][y] = 3;
                         }else{
-                            board[y][x] = 0;
+                            board[x][y] = 0;
                         }
                     }else{
                         if(y >= 5){
                             if(x%2 == 1){
-                                board[y][x] = 1;
+                                board[x][y] = 1;
                             }else{
-                                board[y][x] = 0;
+                                board[x][y] = 0;
                             }
                         }
                     }
                 }else{
                     if(y<3){
                         if(x%2 == 0){
-                            board[y][x] = 3;
+                            board[x][y] = 3;
                         }else{
-                            board[y][x] = 0;
+                            board[x][y] = 0;
                         }
                     }else{
                         if(y>=5){
                             if(x%2 == 0){
-                                board[y][x] = 1;
+                                board[x][y] = 1;
                             }else{
-                                board[y][x] = 0;
+                                board[x][y] = 0;
                             }
                         }
                     }
@@ -64,10 +68,92 @@ public class CheckersBoard {
         }
     }
     
+    /**
+     * Method move
+     * 
+     * Moves a Checker piece.
+     * 
+     * Legend of Return values:
+     * 1 : successful move
+     * 2 : invalid piece selected
+     * 
+     * 
+     * @param xi
+     * @param yi
+     * @param xdest
+     * @param ydest
+     * @return 
+     */
     public int move(int xi, int yi, int xdest, int ydest){
         int direction = determineDirection(xi,yi,xdest,ydest);
-        int piece = board[yi][xi];
-        return 0;
+        double distance = moveDistanceLin(xi,yi,xdest,ydest);
+        int piece = board[xi][yi];
+        
+        switch(piece){
+            case 1:
+                if(direction <= NE){
+                    if(distance == 1.0 && board[xdest][ydest] == 0){
+                        board[xi][yi] = 0;
+                        board[xdest][ydest] = 1;
+                    }else{
+                        //jump
+                    }
+                }
+                break;
+            case 2:
+                if(distance == 1.0 && board[xdest][ydest] == 0){
+                    board[xi][yi] = 0;
+                    board[xdest][ydest] = 2;
+                }else{
+                    //jump
+                }
+                break;
+            case 3:
+                if(direction >= SE){
+                    if(distance == 1.0 && board[xdest][ydest] == 0){
+                        board[xi][yi] = 0;
+                        board[xdest][ydest] = 3;
+                    }else{
+                        //jump
+                    }
+                }
+                break;
+            case 4:
+                if(distance == 1.0 && board[xdest][ydest] == 0){
+                    board[xi][yi] = 0;
+                    board[xdest][ydest] = 4;
+                }else{
+                    //jump
+                }
+                break;
+            default:
+                System.out.println("Invalid piece selected");
+                return 2;
+        }
+        
+        return 1;
+    }
+    
+    /**
+     * Method moveDistanceLin
+     * 
+     * Calculates the linear distance between two squares. This method is
+     * useful in determining whether or not the player wants to move to an
+     * adjacent spot or make a more complicated move.
+     * 
+     * Note: The results are halved to make a regular move have a
+     * value of 1.
+     * 
+     * @param xi    Initial x position of the Checker piece.
+     * @param yi    Initial y position of the Checker piece.
+     * @param xdest The x destination of the Checker piece.
+     * @param ydest The y destination of the Checker piece.
+     * @return      the distance between the initial and final positions.
+     */
+    private double moveDistanceLin(int xi, int yi, int xdest, int ydest){
+        double xDistance = Math.abs(xi-xdest)/2;
+        double yDistance = Math.abs(yi-ydest)/2;
+        return xDistance + yDistance;
     }
     
     /**
@@ -87,12 +173,7 @@ public class CheckersBoard {
      * @param ydest The y destination of the Checker piece.
      * @return 
      */
-    private int determineDirection(int xi, int yi, int xdest, int ydest){
-        int NW = 1;
-        int NE = 2;
-        int SE = 3;
-        int SW = 4;
-        
+    private int determineDirection(int xi, int yi, int xdest, int ydest){        
         if(xi > xdest){
             if(yi > ydest){
                 return NW;
