@@ -94,36 +94,44 @@ public class CheckersBoard {
                 if(direction <= NE){
                     if(distance == 1.0 && board[xdest][ydest] == 0){
                         board[xi][yi] = 0;
-                        board[xdest][ydest] = 1;
+                        board[xdest][ydest] = piece;
                     }else{
-                        //jump
+                        if(distance == 2.0){
+                            jump(xi,yi,xdest,ydest,direction);
+                        }
                     }
                 }
                 break;
             case 2:
                 if(distance == 1.0 && board[xdest][ydest] == 0){
                     board[xi][yi] = 0;
-                    board[xdest][ydest] = 2;
+                    board[xdest][ydest] = piece;
                 }else{
-                    //jump
+                    if(distance == 2.0){
+                        jump(xi,yi,xdest,ydest,direction);
+                    }
                 }
                 break;
             case 3:
                 if(direction >= SE){
                     if(distance == 1.0 && board[xdest][ydest] == 0){
                         board[xi][yi] = 0;
-                        board[xdest][ydest] = 3;
+                        board[xdest][ydest] = piece;
                     }else{
-                        //jump
+                        if(distance == 2.0){
+                            jump(xi,yi,xdest,ydest,direction);
+                        }
                     }
                 }
                 break;
             case 4:
                 if(distance == 1.0 && board[xdest][ydest] == 0){
                     board[xi][yi] = 0;
-                    board[xdest][ydest] = 4;
+                    board[xdest][ydest] = piece;
                 }else{
-                    //jump
+                    if(distance == 2.0){
+                        jump(xi,yi,xdest,ydest,direction);
+                    }
                 }
                 break;
             default:
@@ -134,6 +142,138 @@ public class CheckersBoard {
         return 1;
     }
     
+    /**
+     * Method jump
+     * 
+     * Determines whether a jump can be performed, and if it can, it performs
+     * it by moving the selected piece to the destination and deleting the
+     * piece in between.
+     * 
+     * @param xi        The initial x position of the selected piece.
+     * @param yi        The initial y position of the selected piece.
+     * @param xdest     The final x position of the selected piece.
+     * @param ydest     The final y position of the selected piece.
+     * @param direction The direction that the piece will be moving in.
+     * @return 
+     */
+    
+    private boolean jump(int xi, int yi, int xdest, int ydest, int direction){
+        int piece = board[xi][yi];
+        
+        switch(direction){
+            case NW:
+                if(canMove(direction, piece) && canJump(xi,yi, xdest, ydest)){
+                    board[xdest][ydest] = piece;
+                    board[xdest+1][ydest+1] = 0;
+                    return true;
+                }
+                break;
+            case NE:
+                if(canMove(direction, piece) && canJump(xi,yi, xdest, ydest)){
+                    board[xdest][ydest] = piece;
+                    board[xdest-1][ydest+1] = 0;
+                    return true;
+                }
+                break;
+            case SE:
+                if(canMove(direction, piece) && canJump(xi,yi, xdest, ydest)){
+                    board[xdest][ydest] = piece;
+                    board[xdest+1][ydest-1] = 0;
+                    return true;
+                }
+                break;
+            case SW:
+                if(canMove(direction, piece) && canJump(xi,yi, xdest, ydest)){
+                    board[xdest][ydest] = piece;
+                    board[xdest-1][ydest-1] = 0;
+                    return true;
+                }
+                break;
+            default:
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Method canMove
+     * 
+     * Determines whether a given piece can move towards the given direction.
+     * 
+     * @param direction The direction the piece wants to move to.
+     * @param piece     The piece that wants to move.
+     * @return          True if the piece can move in that direction, false
+     *                  otherwise.
+     */
+    private boolean canMove(int direction, int piece){
+        switch(piece){
+            case 1:
+                if(direction <= NE){
+                    return true;
+                }
+                break;
+            case 3:
+                if(direction >= SE){
+                    return true;
+                }
+                break;
+            default:
+                return true;
+        }
+        return false;
+    }
+    
+    /**
+     * canJump
+     * 
+     * Determines if a jump can be performed given a location and destination.
+     * 
+     * @param xi    The initial x position of the acting piece.
+     * @param yi    The initial y position of the acting piece.
+     * @param xdest The final x position of the acting piece.
+     * @param ydest The final y position of the acting piece.
+     * @return      True if a jump can be performed, false otherwise.
+     */
+    private boolean canJump(int xi, int yi, int xdest, int ydest){
+        int piece = board[xi][yi];
+        int direction = determineDirection(xi,yi,xdest,ydest);
+        
+        switch(direction){
+            case NW:
+                return opponentPiece(board[xdest+1][ydest+1], piece);
+            case NE:
+                return opponentPiece(board[xdest-1][ydest+1], piece);
+            case SE:
+                return opponentPiece(board[xdest+1][ydest-1], piece);
+            case SW:
+                return opponentPiece(board[xdest-1][ydest-1], piece);
+            default:
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Method opponentPiece
+     * 
+     * Determines whether the target piece is a piece belonging to the opponent,
+     * with respect of the player piece.
+     * 
+     * @param targetPiece   The piece whose alignment needs evaluation.
+     * @param playerPiece   The player's piece.
+     * @return              True if target piece is opponent's, false otherwise.
+     */
+    private boolean opponentPiece(int targetPiece, int playerPiece){
+        if(targetPiece == 0){
+            return false;
+        }
+        if(playerPiece <= 2 && targetPiece >= 3){
+            return true;
+        }else{
+            return playerPiece >= 3 && targetPiece <= 2;
+        }
+    }
+
     /**
      * Method moveDistanceLin
      * 
