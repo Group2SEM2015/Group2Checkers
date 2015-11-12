@@ -18,6 +18,8 @@ public class TutorialGUI {
     public JMenuItem steps = new JMenuItem("List of Tutorial steps to come");
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
+    public JPanel boardPanel = new JPanel();
+    
     public TutorialGUI (){
         //sets image to JLabel
        ImageIcon icon = new ImageIcon(new ImageIcon("Images/checkers_board.png").getImage().getScaledInstance(700, 600, Image.SCALE_DEFAULT));
@@ -30,6 +32,12 @@ public class TutorialGUI {
         menu.add(steps);
         board.add(pic);
         tutorial.add(board, BorderLayout.CENTER);
+        boardPanel.setSize(700,600);
+        boardPanel.setOpaque(true);
+        boardPanel.setBackground(new Color(0,0,0,0));
+        boardPanel.setLayout(new GridLayout(8,8));
+        //boardPanel.setGlassPane(boardPanel);
+        tutorial.add(boardPanel, BorderLayout.CENTER);
         tutorial.add(tips, BorderLayout.WEST);
         buttonPanel.setLayout(new GridLayout(1,2));
         tutorial.add(buttonPanel, BorderLayout.SOUTH);
