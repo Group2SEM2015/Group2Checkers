@@ -73,10 +73,6 @@ public class CheckersBoard {
      * 
      * Moves a Checker piece.
      * 
-     * Legend of Return values:
-     * 1 : successful move
-     * 2 : invalid piece selected
-     * 
      * 
      * @param xi
      * @param yi
@@ -84,7 +80,7 @@ public class CheckersBoard {
      * @param ydest
      * @return 
      */
-    public int move(int xi, int yi, int xdest, int ydest){
+    public boolean move(int xi, int yi, int xdest, int ydest){
         int direction = determineDirection(xi,yi,xdest,ydest);
         double distance = moveDistanceLin(xi,yi,xdest,ydest);
         int piece = board[xi][yi];
@@ -136,10 +132,10 @@ public class CheckersBoard {
                 break;
             default:
                 System.out.println("Invalid piece selected");
-                return 2;
+                return false;
         }
         
-        return 1;
+        return true;
     }
     
     /**
