@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package checkers;
 
 /**
@@ -36,13 +31,18 @@ public class CheckersPiece {
     /**
      * Method move
      * 
-     * Moves this CheckerPiece to the x,y coordinates passed as parameters.
+     * Determines whether to move or jump by looking at the x,y coordinates of
+     * the destination and then performs that action.
+     * 
+     * Note: If the current player performed a jump the previous turn, their
+     * turn does not end until they can no longer jump.
      * 
      * @param xdest The x coordinate of the destination.
      * @param ydest The y coordinate of the destination.
      * @return      true if successfully moved, false otherwise.
      */
     public boolean move(int xdest, int ydest){
+        board = boardControl.getBoard();
         if(xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE){
             return false;
         }
@@ -54,7 +54,8 @@ public class CheckersPiece {
         switch(piece){
             case 1:
                 if(direction <= NE){
-                    if(distance == 1.0 && board[xdest][ydest] == null){
+                    if(distance == 1.0 && board[xdest][ydest] == null 
+                            && boardControl.getTurnsRepeated() == 0){
                         board[x][y] = null;
                         board[xdest][ydest] = this;
                         x = xdest;
@@ -67,7 +68,8 @@ public class CheckersPiece {
                 }
                 break;
             case 2:
-                if(distance == 1.0 && board[xdest][ydest] == null){
+                if(distance == 1.0 && board[xdest][ydest] == null
+                        && boardControl.getTurnsRepeated() == 0){
                     board[x][y] = null;
                     board[xdest][ydest] = this;
                     x = xdest;
@@ -80,7 +82,8 @@ public class CheckersPiece {
                 break;
             case 3:
                 if(direction >= SE){
-                    if(distance == 1.0 && board[xdest][ydest] == null){
+                    if(distance == 1.0 && board[xdest][ydest] == null
+                            && boardControl.getTurnsRepeated() == 0){
                         board[x][y] = null;
                         board[xdest][ydest] = this;
                         x = xdest;
@@ -93,7 +96,8 @@ public class CheckersPiece {
                 }
                 break;
             case 4:
-                if(distance == 1.0 && board[xdest][ydest] == null){
+                if(distance == 1.0 && board[xdest][ydest] == null
+                        && boardControl.getTurnsRepeated() == 0){
                     board[x][y] = null;
                     board[xdest][ydest] = this;
                     x = xdest;
@@ -105,10 +109,12 @@ public class CheckersPiece {
                 }
                 break;
             default:
-                System.out.println("Invalid piece selected");
+                System.out.println("Invalid piece type.");
                 return false;
         }
         
+        boardControl.flipTurn();
+        boardControl.setBoard(board);
         return true;
     }
     
@@ -124,9 +130,8 @@ public class CheckersPiece {
      * @param xdest     The final x position of the selected piece.
      * @param ydest     The final y position of the selected piece.
      * @param direction The direction that the piece will be moving in.
-     * @return 
+     * @return          true if the jump is successful, false otherwise.
      */
-    
     private boolean jump(int xi, int yi, int xdest, int ydest, int direction){
         int piece = board[xi][yi].getPieceType();
         
@@ -137,6 +142,7 @@ public class CheckersPiece {
                     board[xdest+1][ydest+1] = null;
                     x = xdest;
                     y = ydest;
+                    checkJumpOptions();
                     return true;
                 }
                 break;
@@ -146,6 +152,7 @@ public class CheckersPiece {
                     board[xdest-1][ydest+1] = null;
                     x = xdest;
                     y = ydest;
+                    checkJumpOptions();
                     return true;
                 }
                 break;
@@ -155,6 +162,7 @@ public class CheckersPiece {
                     board[xdest+1][ydest-1] = null;
                     x = xdest;
                     y = ydest;
+                    checkJumpOptions();
                     return true;
                 }
                 break;
@@ -164,6 +172,7 @@ public class CheckersPiece {
                     board[xdest-1][ydest-1] = null;
                     x = xdest;
                     y = ydest;
+                    checkJumpOptions();
                     return true;
                 }
                 break;
@@ -171,6 +180,36 @@ public class CheckersPiece {
         }
         
         return false;
+    }
+    
+    /**
+     * Method checkJumpOptions
+     * 
+     * Determines if a sequential jump is possible from the lading location, and
+     * if it is, flips the turn boolean in the boardControl object to extend
+     * the current player's turn.
+     */
+    private void checkJumpOptions(){
+        switch(pieceType){
+            case P1P:
+                if(canJump(x,y,x-1,y-1) || canJump(x,y,x+1,y-1)){
+                    boardControl.flipTurn();
+                }
+                break;
+            case CP2K:
+            case P1K:
+                if(canJump(x,y,x-1,y-1) || canJump(x,y,x+1,y-1)
+                        || canJump(x,y,x-1,y+1) || canJump(x,y,x+1,y+1)){
+                    boardControl.flipTurn();
+                }
+                break;
+            case CP2P:
+                if(canJump(x,y,x-1,y+1) || canJump(x,y,x+1,y+1)){
+                    boardControl.flipTurn();
+                }
+                break;
+            default:
+        }
     }
     
     /**
@@ -213,6 +252,9 @@ public class CheckersPiece {
      * @return      True if a jump can be performed, false otherwise.
      */
     private boolean canJump(int xi, int yi, int xdest, int ydest){
+        if(xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE){
+            return false;
+        }
         int piece = board[xi][yi].getPieceType();
         int direction = determineDirection(xi,yi,xdest,ydest);
         
