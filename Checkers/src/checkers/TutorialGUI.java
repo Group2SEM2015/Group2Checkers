@@ -1,10 +1,10 @@
 package checkers;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+//import java.awt.image.*;
+//import java.io.File;
+//import java.io.IOException;
+//import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class TutorialGUI {
@@ -20,7 +20,7 @@ public class TutorialGUI {
     public JMenuItem steps = new JMenuItem("List of Tutorial steps to come");
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
-    
+    public boolean draw = false;
     public TutorialGUI()
     {
         tutorial.setSize(900, 700);
@@ -77,5 +77,14 @@ public class TutorialGUI {
                 checkerBoardPanel.add(checkerBoard1[i][k]);
             }
         }
+       //checkerBoard1[0][1];
     }
+    /*
+    Draws Checker piece
+     public void paint(Graphics g) {
+        Graphics2D ga = (Graphics2D)g;
+        ga.setPaint(Color.red);
+        ga.fillOval(50,50,25,25);
+  }
+    */
 }
