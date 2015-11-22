@@ -40,6 +40,7 @@ public class TutorialGUI
     //public JMenuItem steps = new JMenuItem("List of Tutorial steps to come");
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
+    public JLayeredPane boardLayer = new JLayeredPane();
 
     public TutorialGUI()
     {
@@ -55,7 +56,8 @@ public class TutorialGUI
         createCheckerBoard(checkerBoardPanel);
 //        addChecker();
 
-        tutorial.add(checkerBoardPanel, BorderLayout.CENTER);
+        //tutorial.add(checkerBoardPanel, BorderLayout.CENTER);
+        tutorial.add(boardLayer, BorderLayout.CENTER);
         tutorial.add(tips, BorderLayout.WEST);
         buttonPanel.setLayout(new GridLayout(1, 2));
         tutorial.add(buttonPanel, BorderLayout.SOUTH);
@@ -213,11 +215,12 @@ public class TutorialGUI
     
     public void createCheckerBoard(JPanel checkerBoardPanel)
     {
-        
+        int dx,dy, dfill;
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
+        //checkerBoardPanel.setLayout(null);
+        checkerBoardPanel.setSize(650, 612);
         CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
-        //CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
 
         CheckersPiece[][] tmp = cb.getBoard();
 
@@ -243,6 +246,7 @@ public class TutorialGUI
          redPanel.setVisible(true);
          checkerBoard1[0][1] = (redPanel);
          checkerBoardPanel.add(checkerBoard1[0][1]);*/
+        if(true){
         for (int i = 0; i < 8; i++)
         {
             for (int k = 0; k < 8; k++)
@@ -254,7 +258,7 @@ public class TutorialGUI
                     redPanel.setBackground(Color.red);
                     if (tmp[i][k] != null)
                     {
-                        redPanel.add(tmp[i][k], BorderLayout.CENTER);
+                        //redPanel.add(tmp[i][k], BorderLayout.CENTER);
                     }
                     //redPanel.add(new BlackChecker(), BorderLayout.CENTER);
 
@@ -268,7 +272,7 @@ public class TutorialGUI
                     blackPanel.setBackground(Color.black);
                     if (tmp[i][k] != null)
                     {
-                        blackPanel.add(tmp[i][k], BorderLayout.CENTER);
+                        //blackPanel.add(tmp[i][k], BorderLayout.CENTER);
                     }
                     //blackPanel.add(new BlackChecker(), BorderLayout.CENTER);
                     blackPanel.setVisible(true);
@@ -277,8 +281,27 @@ public class TutorialGUI
                 checkerBoardPanel.add(checkerBoard1[i][k]);
             }
         }
-        //checkerBoardPanel.add(tmp[1][0]);
-
+        }
+        
+        int lc = 30;
+        for(int i = 0; i<8; i++){
+            for(int j = 0; j<8; j++){
+                if(tmp[i][j] != null){
+                    //checkerBoardPanel.add(tmp[i][j]);
+                    dx = tmp[i][j].getDrawX();
+                    dy = tmp[i][j].getDrawY();
+                    dfill = tmp[i][j].getDrawFill();
+                    tmp[i][j].setBounds(dx,dy,dfill,dfill);
+                    boardLayer.add(tmp[i][j],Integer.valueOf(lc));
+                    //lc += 1;
+                }
+            }
+        }
+        
+        //tmp[0][1].setBounds(0,0,60,60);
+        //boardLayer.add(tmp[0][1],1);
+        boardLayer.add(checkerBoardPanel, Integer.valueOf(1));
+        
         //checkerBoard1[0][0].add(tmp[0][0]);
 
         /*

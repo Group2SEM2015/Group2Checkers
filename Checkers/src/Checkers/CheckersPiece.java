@@ -4,11 +4,12 @@ import java.awt.*;
 import java.awt.Graphics;
 import javax.swing.*;
 
-public class CheckersPiece extends JComponent
+public class CheckersPiece extends JPanel
 {
 
     private int x, y, pieceType;
     private int px, py; //Used for the x and y locations of the paint method
+    private int pfill; //Used for the fill width and height of Oval
     private CheckersPiece[][] board;
     private CheckersBoard boardControl;
     private JPanel boardPanel;
@@ -22,6 +23,7 @@ public class CheckersPiece extends JComponent
     final int P1K = 2;      //Player 1 King
     final int CP2P = 3;     //CPU/Player 2 Piece
     final int CP2K = 4;     //CPU/Player 2 King
+    final int OFFSET = 10;
 
     public CheckersPiece(int pieceType, CheckersBoard boardControl,
             int x, int y, JPanel boardPanel)
@@ -32,9 +34,7 @@ public class CheckersPiece extends JComponent
         this.x = x;
         this.y = y;
         this.boardPanel = boardPanel;
-        px = 50;
-        py = 0;
-        //calculatePosition();
+        calculatePosition();
     }
     
     /**
@@ -48,6 +48,13 @@ public class CheckersPiece extends JComponent
         Dimension xy = boardPanel.getSize();
         px = (((int) xy.getWidth()) /8) *x;
         py = (((int) xy.getHeight())/8) *y;
+        px += OFFSET;
+        py += OFFSET;
+        System.out.println(xy.getWidth() + ":" + xy.getHeight());
+        System.out.println(x + ":" + y);
+        pfill = ((int) (xy.getWidth()))/8;
+        pfill -= OFFSET * 2; //OFFSET variable only accounts for one side
+        
     }
 
     /**
@@ -448,8 +455,21 @@ public class CheckersPiece extends JComponent
         {
             theColor = Color.WHITE;
         }
-        //calculatePosition();
+        setOpaque(false);
+        calculatePosition();
         g.setColor(theColor);
-        g.fillOval(px, py, 60, 60);
+        g.fillOval(0, 0, pfill, pfill);
+    }
+    
+    public int getDrawX(){
+        return px;
+    }
+    
+    public int getDrawY(){
+        return py;
+    }
+    
+    public int getDrawFill(){
+        return pfill;
     }
 }
