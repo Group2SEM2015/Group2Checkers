@@ -1,5 +1,7 @@
 package Checkers;
 
+import javax.swing.JPanel;
+
 /**
  *
  * @author Samir
@@ -19,13 +21,15 @@ public class CheckersBoard
     private CheckersPiece[][] board = new CheckersPiece[BOARDEDGE][BOARDEDGE];
     private boolean turn = false;
     private int turnsRepeated = 0;
-
+    private JPanel boardPanel;
     /**
      * Method CheckersBoard
      * 
-     * Default constructor for CheckersBoard that populates the board.
+     * Parameterized constructor for CheckersBoard that populates the board.
+     * @param boardPanel    The JPanel that holds the board;
      */
-    public CheckersBoard(){
+    public CheckersBoard(JPanel boardPanel){
+        this.boardPanel = boardPanel;
         newGame();
     }
     
@@ -50,7 +54,7 @@ public class CheckersBoard
                     {
                         if (x % 2 == 1)
                         {
-                            board[y][x] = new CheckersPiece(CP2P, this, x, y);
+                            board[y][x] = new CheckersPiece(CP2P, this, x, y, boardPanel);
                             //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                         }
                         else
@@ -65,7 +69,7 @@ public class CheckersBoard
                         {
                             if (x % 2 == 1)
                             {
-                                board[y][x] = new CheckersPiece(P1P, this, x, y);
+                                board[y][x] = new CheckersPiece(P1P, this, x, y, boardPanel);
                                 //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                             }
                             else
@@ -82,7 +86,7 @@ public class CheckersBoard
                     {
                         if (x % 2 == 0)
                         {
-                            board[y][x] = new CheckersPiece(CP2P, this, x, y);
+                            board[y][x] = new CheckersPiece(CP2P, this, x, y, boardPanel);
                             //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                         }
                         else
@@ -97,7 +101,7 @@ public class CheckersBoard
                         {
                             if (x % 2 == 0)
                             {
-                                board[y][x] = new CheckersPiece(P1P, this, x, y);
+                                board[y][x] = new CheckersPiece(P1P, this, x, y, boardPanel);
                                 //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                             }
                             else

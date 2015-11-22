@@ -1,15 +1,17 @@
 package Checkers;
 
 import java.awt.*;
-//import java.awt.Graphics;
+import java.awt.Graphics;
 import javax.swing.*;
 
 public class CheckersPiece extends JComponent
 {
 
     private int x, y, pieceType;
+    private int px, py; //Used for the x and y locations of the paint method
     private CheckersPiece[][] board;
     private CheckersBoard boardControl;
+    private JPanel boardPanel;
 
     final int BOARDEDGE = 8;
     final int NW = 1;
@@ -22,13 +24,28 @@ public class CheckersPiece extends JComponent
     final int CP2K = 4;     //CPU/Player 2 King
 
     public CheckersPiece(int pieceType, CheckersBoard boardControl,
-            int x, int y)
+            int x, int y, JPanel boardPanel)
     {
         this.pieceType = pieceType;
         this.boardControl = boardControl;
         board = boardControl.getBoard();
         this.x = x;
         this.y = y;
+        this.boardPanel = boardPanel;
+        calculatePosition();
+    }
+    
+    /**
+     * Method calculatePosition
+     * 
+     * Description: Gets the x and y position of the panel the piece is in,
+     * then uses their position in the CheckersBoard to calculate where they
+     * should be drawn in the boardPanel.
+     */
+    private void calculatePosition(){
+        Dimension xy = boardPanel.getSize();
+        px = (((int) xy.getWidth()) /8) *x;
+        py = (((int) xy.getHeight())/8) *y;
     }
 
     /**
@@ -416,25 +433,21 @@ public class CheckersPiece extends JComponent
         return pieceType;
     }
 
+    @Override
     public void paint(Graphics g)
     {
         super.paint(g); //must call the parent's paint method before drawing the piece
-        Color theColor;
+        Color theColor; //Will soon have the color of the CheckersPiece
         if(pieceType <= 2)
         {
             theColor = Color.YELLOW;
         }
         else
         {
-            theColor = Color.white;
+            theColor = Color.WHITE;
         }
-        colorChecker(g, theColor);
-        g.fillOval(20, 10, 60, 60);
-    }
-    
-    public void colorChecker(Graphics g, Color theColor)
-    {  
+        calculatePosition();
         g.setColor(theColor);
-    } 
+        g.fillOval(px, py, 60, 60);
+    }
 }
-
