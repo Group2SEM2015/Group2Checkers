@@ -32,7 +32,9 @@ public class CheckersPiece extends JComponent
         this.x = x;
         this.y = y;
         this.boardPanel = boardPanel;
-        calculatePosition();
+        px = 50;
+        py = 0;
+        //calculatePosition();
     }
     
     /**
@@ -446,7 +448,7 @@ public class CheckersPiece extends JComponent
         {
             theColor = Color.WHITE;
         }
-        calculatePosition();
+        //calculatePosition();
         g.setColor(theColor);
         g.fillOval(px, py, 60, 60);
     }

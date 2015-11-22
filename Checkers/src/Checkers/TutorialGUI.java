@@ -216,7 +216,7 @@ public class TutorialGUI
         
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
-        CheckersBoard cb = new CheckersBoard();
+        CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
         //CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
 
         CheckersPiece[][] tmp = cb.getBoard();
@@ -277,6 +277,7 @@ public class TutorialGUI
                 checkerBoardPanel.add(checkerBoard1[i][k]);
             }
         }
+        //checkerBoardPanel.add(tmp[1][0]);
 
         //checkerBoard1[0][0].add(tmp[0][0]);
 
