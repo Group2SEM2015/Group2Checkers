@@ -13,6 +13,7 @@ public class CheckersPiece extends JPanel
     private CheckersPiece[][] board;
     private CheckersBoard boardControl;
     private JPanel boardPanel;
+    private boolean drag = false;
 
     final int BOARDEDGE = 8;
     final int NW = 1;
@@ -45,15 +46,17 @@ public class CheckersPiece extends JPanel
      * should be drawn in the boardPanel.
      */
     private void calculatePosition(){
-        Dimension xy = boardPanel.getSize();
-        px = (((int) xy.getWidth()) /8) *x;
-        py = (((int) xy.getHeight())/8) *y;
-        px += OFFSET;
-        py += OFFSET;
-        System.out.println(xy.getWidth() + ":" + xy.getHeight());
-        System.out.println(x + ":" + y);
-        pfill = ((int) (xy.getWidth()))/8;
-        pfill -= OFFSET * 2; //OFFSET variable only accounts for one side
+        if(!drag){
+            Dimension xy = boardPanel.getSize();
+            px = (((int) xy.getWidth()) /8) *x;
+            py = (((int) xy.getHeight())/8) *y;
+            px += OFFSET;
+            py += OFFSET;
+            System.out.println(xy.getWidth() + ":" + xy.getHeight());
+            System.out.println(x + ":" + y);
+            pfill = ((int) (xy.getWidth()))/8;
+            pfill -= OFFSET * 2; //OFFSET variable only accounts for one side
+        }
         
     }
 
@@ -471,5 +474,27 @@ public class CheckersPiece extends JPanel
     
     public int getDrawFill(){
         return pfill;
+    }
+    
+    public void setDrawX(int newX){
+        px = newX;
+    }
+    
+    public void setDrawY(int newY){
+        py = newY;
+    }
+    
+    /**
+     * Method dragFlip
+     * 
+     * Description flips the drag boolean from true to false and vice versa.
+     * This method is used to keep the CheckersPiece from recalculating where
+     * it is supposed to be.
+     * 
+     * @return the new value of the boolean drag
+     */
+    public boolean dragFlip(){
+        drag = !drag;
+        return drag;
     }
 }
