@@ -52,7 +52,7 @@ public class TutorialGUI
         menu.add(step2);
         menu.add(step3);
         menu.add(step4);
-        createCheckerBoard();
+        createCheckerBoard(checkerBoardPanel);
 //        addChecker();
 
         tutorial.add(checkerBoardPanel, BorderLayout.CENTER);
@@ -62,6 +62,8 @@ public class TutorialGUI
         buttonPanel.add(previous);
         buttonPanel.add(next);
         tutorial.add(menuBar, BorderLayout.NORTH);
+        
+        System.out.println(checkerBoardPanel.getSize());
 
         tips.setEditable(false);
         tips.setText("Hello and Welcome to the wonderfull\n"
@@ -179,15 +181,43 @@ public class TutorialGUI
 
             }
         });
+        
+        checkerBoardPanel.addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent e){
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println(x);
+                System.out.println(y);
+                
+            }
+        });
+        checkerBoardPanel.addMouseMotionListener(new MouseMotionAdapter(){
+            public void mouseDragged(MouseEvent e){
+                int x = e.getX();
+                int y = e.getY();
+               // System.out.println(x);
+                //System.out.println(y);
+            }
+        });
+        checkerBoardPanel.addMouseListener(new MouseAdapter(){
+            public void mouseReleased(MouseEvent e){
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println(x);
+                System.out.println(y);
+                checkerBoardPanel.repaint();
+            }
+         });
+        
     }
-
-    public void createCheckerBoard()
+    
+    public void createCheckerBoard(JPanel checkerBoardPanel)
     {
-
+        
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
-
         CheckersBoard cb = new CheckersBoard();
+        //CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
 
         CheckersPiece[][] tmp = cb.getBoard();
 
@@ -289,7 +319,7 @@ public class TutorialGUI
                 if ((j + i) % 2 != 0)
                 {
                     checkerBoard1[i][j].setLayout(new BorderLayout());
-                    //checkerBoard1[i][j].add(new BlackChecker(), BorderLayout.CENTER);
+                    checkerBoard1[i][j].add(new BlackChecker(), BorderLayout.CENTER);
                 }
             }
         }
@@ -302,9 +332,10 @@ public class TutorialGUI
                 if ((j + i) % 2 != 0)
                 {
                     checkerBoard1[i][j].setLayout(new BorderLayout());
-                    //checkerBoard1[i][j].add(new RedChecker(), BorderLayout.CENTER);
+                    checkerBoard1[i][j].add(new RedChecker(), BorderLayout.CENTER);
                 }
             }
         }
+    
     }
 }
