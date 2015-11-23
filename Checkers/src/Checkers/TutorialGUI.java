@@ -1,6 +1,8 @@
 package Checkers;
 
 import java.awt.*;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -41,6 +43,8 @@ public class TutorialGUI
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
     public JLayeredPane boardLayer = new JLayeredPane();
+    public CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
+    public CheckersPiece[][] tmp = cb.getBoard();
 
     public TutorialGUI()
     {
@@ -203,10 +207,12 @@ public class TutorialGUI
         });
         checkerBoardPanel.addMouseListener(new MouseAdapter(){
             public void mouseReleased(MouseEvent e){
+                
                 int x = e.getX();
                 int y = e.getY();
                 System.out.println(x);
                 System.out.println(y);
+                
                 checkerBoardPanel.repaint();
             }
          });
@@ -219,9 +225,6 @@ public class TutorialGUI
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
         checkerBoardPanel.setSize(650, 612);
-        CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
-
-        CheckersPiece[][] tmp = cb.getBoard();
         
         for (int i = 0; i < 8; i++)
         {
@@ -260,7 +263,33 @@ public class TutorialGUI
             }
         }
         boardLayer.add(checkerBoardPanel, Integer.valueOf(1));
-        
+        CheckersPiece bobby;
+        for(int i = 0; i < 8; i++){ //8 = BOARDEDGE
+            for(int j = 0; j < 8; j++){
+                bobby = tmp[i][j];
+                bobby.addMouseListener(new MouseAdapter(){
+                    public void mouseReleased(MouseEvent e){
+
+                        int x = e.getX();
+                        int y = e.getY();
+                        System.out.println(x);
+                        System.out.println(y);
+                        bobby.setLocation(x, y);
+                    }
+                });
+            }
+        }
+        checkerBoardPanel.addMouseListener(new MouseAdapter(){
+            public void mouseReleased(MouseEvent e){
+                
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println(x);
+                System.out.println(y);
+                boardLayer.setLocation(x, y);
+                //checkerBoardPanel.repaint();
+            }
+         });
     }
 
     public void addChecker()
