@@ -274,7 +274,7 @@ public class TutorialGUI
                         int y = e.getY();
                         System.out.println(x);
                         System.out.println(y);
-                        //bobby.setLocation(x, y);
+                        bobby.setLocation(x, y);
                     }
                 });
             }
