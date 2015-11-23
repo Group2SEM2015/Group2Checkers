@@ -238,7 +238,7 @@ public class TutorialGUI
         
         for(int i = 0; i < 24; i++){ //8 = BOARDEDGE
             pieceList[i].addMouseListener(new CheckersMouseAdapter(pieceList,
-                    cb,i));
+                    cb,i, checkerBoardPanel));
         }
         
     }

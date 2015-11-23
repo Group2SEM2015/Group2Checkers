@@ -459,7 +459,10 @@ public class CheckersPiece extends JPanel
             theColor = Color.WHITE;
         }
         setOpaque(false);
-        calculatePosition();
+        if(!drag){
+            calculatePosition();
+        }
+        //setLocation(px,py);
         g.setColor(theColor);
         g.fillOval(0, 0, pfill, pfill);
     }
