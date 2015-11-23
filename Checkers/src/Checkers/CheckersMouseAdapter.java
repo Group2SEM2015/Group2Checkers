@@ -36,6 +36,14 @@ public class CheckersMouseAdapter extends MouseAdapter{
         int y = e.getY();
         System.out.println(x);
         System.out.println(y);
+    }
+    
+    @Override
+    public void mouseReleased(MouseEvent e){
+        int x = e.getX();
+        int y = e.getY();
+        System.out.println(x);
+        System.out.println(y);
         board[index].setLocation(x, y);
     }
 }
