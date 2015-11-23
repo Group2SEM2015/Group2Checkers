@@ -9,22 +9,6 @@ import javax.swing.*;
 public class TutorialGUI
 {
 
-    /*public JFrame tutorial = new JFrame("Tutorial Window");
-     public JPanel[][] checkerBoard1;
-     public JPanel checkerBoardPanel = new JPanel();
-     public JPanel redPanel;
-     public JPanel blackPanel;
-     public JPanel buttonPanel = new JPanel();
-     public JTextField tips = new JTextField("Tips will go here");
-     public JTextField bullshit1 = new JTextField("fuck this shit");
-     public JTextField bullshit2 = new JTextField("im sick of this");
-     public JMenuBar menuBar = new JMenuBar();
-     public JMenu menu = new JMenu("Tutorial Steps");
-     public JMenuItem steps = new JMenuItem("List of Tutorial steps to come");
-     public JButton next = new JButton("Next");
-     public JButton previous = new JButton("Previous");
-     public int X11 = 87;
-     public int Y11 = 33;*/
     public JFrame tutorial = new JFrame("Tutorial Window");
     int i = 1;
     public JPanel[][] checkerBoard1;
@@ -43,8 +27,6 @@ public class TutorialGUI
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
     public JLayeredPane boardLayer = new JLayeredPane();
-    public CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
-    public CheckersPiece[][] tmp = cb.getBoard();
 
     public TutorialGUI()
     {
@@ -205,18 +187,6 @@ public class TutorialGUI
                 //System.out.println(y);
             }
         });
-        checkerBoardPanel.addMouseListener(new MouseAdapter(){
-            public void mouseReleased(MouseEvent e){
-                
-                int x = e.getX();
-                int y = e.getY();
-                System.out.println(x);
-                System.out.println(y);
-                
-                checkerBoardPanel.repaint();
-            }
-         });
-        
     }
     
     public void createCheckerBoard(JPanel checkerBoardPanel)
@@ -225,6 +195,9 @@ public class TutorialGUI
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
         checkerBoardPanel.setSize(650, 612);
+        CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
+        final CheckersPiece[] pieceList = cb.getPieceList();
+        CheckersPiece[][] tmp = cb.getBoard();
         
         for (int i = 0; i < 8; i++)
         {
@@ -249,8 +222,8 @@ public class TutorialGUI
                 checkerBoardPanel.add(checkerBoard1[i][k]);
             }
         }
-        
-        int layer = 2;
+        boardLayer.add(checkerBoardPanel, Integer.valueOf(1));
+        int layer = 30;
         for(int i = 0; i<8; i++){
             for(int j = 0; j<8; j++){
                 if(tmp[i][j] != null){
@@ -262,34 +235,12 @@ public class TutorialGUI
                 }
             }
         }
-        boardLayer.add(checkerBoardPanel, Integer.valueOf(1));
-        CheckersPiece bobby;
-        for(int i = 0; i < 8; i++){ //8 = BOARDEDGE
-            for(int j = 0; j < 8; j++){
-                bobby = tmp[i][j];
-                bobby.addMouseListener(new MouseAdapter(){
-                    public void mouseReleased(MouseEvent e){
-
-                        int x = e.getX();
-                        int y = e.getY();
-                        System.out.println(x);
-                        System.out.println(y);
-                        bobby.setLocation(x, y);
-                    }
-                });
-            }
+        
+        for(int i = 0; i < 24; i++){ //8 = BOARDEDGE
+            pieceList[i].addMouseListener(new CheckersMouseAdapter(pieceList,
+                    cb,i));
         }
-        checkerBoardPanel.addMouseListener(new MouseAdapter(){
-            public void mouseReleased(MouseEvent e){
-                
-                int x = e.getX();
-                int y = e.getY();
-                System.out.println(x);
-                System.out.println(y);
-                boardLayer.setLocation(x, y);
-                //checkerBoardPanel.repaint();
-            }
-         });
+        
     }
 
     public void addChecker()
