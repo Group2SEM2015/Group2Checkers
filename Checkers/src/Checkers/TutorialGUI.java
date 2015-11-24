@@ -195,7 +195,7 @@ public class TutorialGUI
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
         checkerBoardPanel.setSize(650, 612);
-        CheckersBoard cb = new CheckersBoard(checkerBoardPanel);
+        CheckersBoard cb = new CheckersBoard(checkerBoardPanel, boardLayer);
         final CheckersPiece[] pieceList = cb.getPieceList();
         CheckersPiece[][] tmp = cb.getBoard();
         

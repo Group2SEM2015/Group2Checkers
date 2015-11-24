@@ -9,11 +9,12 @@ public class CheckersPiece extends JPanel
 
     private int x, y, pieceType;
     private int px, py; //Used for the x and y locations of the paint method
-    private int pfill; //Used for the fill width and height of Oval
+    private int pfill;  //Used for the fill width and height of Oval
     private CheckersPiece[][] board;
     private CheckersBoard boardControl;
     private JPanel boardPanel;
     private boolean drag = false;
+    private JLayeredPane display;
 
     final int BOARDEDGE = 8;
     final int NW = 1;
@@ -27,9 +28,10 @@ public class CheckersPiece extends JPanel
     final int OFFSET = 10;
 
     public CheckersPiece(int pieceType, CheckersBoard boardControl,
-            int x, int y, JPanel boardPanel)
+            int x, int y, JPanel boardPanel, JLayeredPane display)
     {
         this.pieceType = pieceType;
+        this.display = display;
         this.boardControl = boardControl;
         board = boardControl.getBoard();
         this.x = x;
@@ -48,11 +50,11 @@ public class CheckersPiece extends JPanel
     private void calculatePosition(){
         if(!drag){
             Dimension xy = boardPanel.getSize();
-            px = (((int) xy.getWidth()) /8) *x;
-            py = (((int) xy.getHeight())/8) *y;
+            px = (((int) xy.getWidth()) /BOARDEDGE) *x;
+            py = (((int) xy.getHeight())/BOARDEDGE) *y;
             px += OFFSET;
             py += OFFSET;
-            pfill = ((int) (xy.getWidth()))/8;
+            pfill = ((int) (xy.getWidth()))/BOARDEDGE;
             pfill -= OFFSET * 2; //OFFSET variable only accounts for one side
         }
         
@@ -82,6 +84,17 @@ public class CheckersPiece extends JPanel
         int direction = determineDirection(x, y, xdest, ydest);
         double distance = moveDistanceLin(x, y, xdest, ydest);
         int piece = board[x][y].getPieceType();
+        
+        if(canMove(direction, piece, xdest, ydest) && distance == 1){
+            board[xdest][ydest] = this;
+            board[x][y] = null;
+            x = xdest;
+            y = ydest;
+            System.out.println("Moved to: "+x+":"+y);
+        }else if(distance == 2){
+            jump(x,y,xdest,ydest,direction);
+        }
+        
         /*
         switch (piece)
         {
@@ -164,15 +177,11 @@ public class CheckersPiece extends JPanel
                 return false;
         }
         */
-        board[xdest][ydest] = this;
-        x = xdest;
-        y = ydest;
-        System.out.println("Moved to: "+x+":"+y);
         boardControl.flipTurn();
         boardControl.setBoard(board);
         return true;
     }
-
+    
     /**
      * Method jump
      *
@@ -190,13 +199,16 @@ public class CheckersPiece extends JPanel
     private boolean jump(int xi, int yi, int xdest, int ydest, int direction)
     {
         int piece = board[xi][yi].getPieceType();
+        int oppIndex; //Index of opponent object in JLayeredPane display
 
         switch (direction)
         {
             case NW:
-                if (canMove(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
                     board[xdest][ydest] = this;
+                    oppIndex = display.getIndexOf(board[xdest + 1][ydest + 1]);
+                    display.remove(oppIndex);
                     board[xdest + 1][ydest + 1] = null;
                     x = xdest;
                     y = ydest;
@@ -205,9 +217,11 @@ public class CheckersPiece extends JPanel
                 }
                 break;
             case NE:
-                if (canMove(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
                     board[xdest][ydest] = this;
+                    oppIndex = display.getIndexOf(board[xdest - 1][ydest + 1]);
+                    display.remove(oppIndex);
                     board[xdest - 1][ydest + 1] = null;
                     x = xdest;
                     y = ydest;
@@ -216,9 +230,11 @@ public class CheckersPiece extends JPanel
                 }
                 break;
             case SE:
-                if (canMove(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
                     board[xdest][ydest] = this;
+                    oppIndex = display.getIndexOf(board[xdest + 1][ydest - 1]);
+                    display.remove(oppIndex);
                     board[xdest + 1][ydest - 1] = null;
                     x = xdest;
                     y = ydest;
@@ -227,9 +243,11 @@ public class CheckersPiece extends JPanel
                 }
                 break;
             case SW:
-                if (canMove(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
                     board[xdest][ydest] = this;
+                    oppIndex = display.getIndexOf(board[xdest - 1][ydest - 1]);
+                    display.remove(oppIndex);
                     board[xdest - 1][ydest - 1] = null;
                     x = xdest;
                     y = ydest;
@@ -280,6 +298,26 @@ public class CheckersPiece extends JPanel
 
     /**
      * Method canMove
+     * 
+     * Description: Checks if the destination is free, if this piece can
+     * move in the selected direction and if this piece hasn't already made
+     * a move this turn.
+     * 
+     * @param direction the direction of the destination.
+     * @param piece The type of piece this object is.
+     * @param xdest the x position of the destination.
+     * @param ydest the y position of the destination.
+     * @return true if both statements are true, false otherwise.
+     */
+    private boolean canMove(int direction, int piece, int xdest, int ydest){
+        boolean mov = board[xdest][ydest] == null;
+        boolean dir = canDir(direction,piece);
+        boolean turn = boardControl.getTurnsRepeated() == 0;
+        return mov && dir && turn;
+    }
+    
+    /**
+     * Method canDir
      *
      * Determines whether a given piece can move towards the given direction.
      *
@@ -287,7 +325,7 @@ public class CheckersPiece extends JPanel
      * @param piece The piece that wants to move.
      * @return True if the piece can move in that direction, false otherwise.
      */
-    private boolean canMove(int direction, int piece)
+    private boolean canDir(int direction, int piece)
     {
         switch (piece)
         {
@@ -351,8 +389,11 @@ public class CheckersPiece extends JPanel
      * Determines whether the target piece is a piece belonging to the opponent,
      * with respect of the player piece.
      *
-     * Legend: P1P : 1 : Player Piece P1K : 2 : Player King CP2P : 3 :
-     * CPU/Player 2 Piece CP2K : 4 : CPU/Player 2 King
+     * Legend: 
+     * P1P  : 1 : Player Piece 
+     * P1K  : 2 : Player King 
+     * CP2P : 3 : CPU/Player 2 Piece 
+     * CP2K : 4 : CPU/Player 2 King
      *
      * @param targetPiece The piece whose alignment needs evaluation.
      * @param playerPiece The player's piece.
@@ -391,9 +432,12 @@ public class CheckersPiece extends JPanel
      */
     private double moveDistanceLin(int xi, int yi, int xdest, int ydest)
     {
-        double xDistance = Math.abs(xi - xdest) / 2;
-        double yDistance = Math.abs(yi - ydest) / 2;
-        return xDistance + yDistance;
+        double xChange = Math.abs(xi-xdest);
+        double yChange = Math.abs(yi-ydest);
+        double xDistance = xChange / 2;
+        double yDistance = yChange / 2;
+        System.out.println(xDistance+":"+yDistance);
+        return xChange/yChange == 1 ? xDistance + yDistance : 0.00;
     }
 
     /**
@@ -452,9 +496,9 @@ public class CheckersPiece extends JPanel
     }
 
     @Override
-    public void paint(Graphics g)
+    public void paintComponent(Graphics g)
     {
-        super.paint(g); //must call the parent's paint method before drawing the piece
+        super.paintComponent(g); //must call the parent's paint method before drawing the piece
         Color theColor; //Will soon have the color of the CheckersPiece
         if(pieceType <= 2)
         {
