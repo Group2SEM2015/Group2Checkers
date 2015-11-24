@@ -66,14 +66,18 @@ public class CheckersMouseAdapter extends MouseAdapter{
     }
     
     private int convertX(int x){
+        System.out.println("raw x: "+x);
         int w = (int) boardPanel.getWidth();
         x = (x)/(w/BOARDEDGE);
+        System.out.println("converted x: "+x);
         return x;
     }
     
     private int convertY(int y){
+        System.out.println("raw y: "+y);
         int h = (int) boardPanel.getHeight();
         y = (y)/(h/BOARDEDGE);
+        System.out.println("converted y: "+y);
         return y;
     }
 }

@@ -52,8 +52,6 @@ public class CheckersPiece extends JPanel
             py = (((int) xy.getHeight())/8) *y;
             px += OFFSET;
             py += OFFSET;
-            System.out.println(xy.getWidth() + ":" + xy.getHeight());
-            System.out.println(x + ":" + y);
             pfill = ((int) (xy.getWidth()))/8;
             pfill -= OFFSET * 2; //OFFSET variable only accounts for one side
         }
@@ -466,7 +464,7 @@ public class CheckersPiece extends JPanel
         if(!drag){
             calculatePosition();
         }
-        //setLocation(px,py);
+        setLocation(px,py);
         g.setColor(theColor);
         g.fillOval(0, 0, pfill, pfill);
     }
