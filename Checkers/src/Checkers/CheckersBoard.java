@@ -59,14 +59,14 @@ public class CheckersBoard
                     {
                         if (x % 2 == 1)
                         {
-                            board[y][x] = new CheckersPiece(CP2P, this, x, y, boardPanel);
-                            pieceList[i] = board[y][x];
+                            board[x][y] = new CheckersPiece(CP2P, this, x, y, boardPanel);
+                            pieceList[i] = board[x][y];
                             i++;
                             //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                         }
                         else
                         {
-                            board[y][x] = null;
+                            board[x][y] = null;
                             //System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                         }
                     }
@@ -76,14 +76,14 @@ public class CheckersBoard
                         {
                             if (x % 2 == 1)
                             {
-                                board[y][x] = new CheckersPiece(P1P, this, x, y, boardPanel);
-                                pieceList[i] = board[y][x];
+                                board[x][y] = new CheckersPiece(P1P, this, x, y, boardPanel);
+                                pieceList[i] = board[x][y];
                                 i++;
                                 //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                             }
                             else
                             {
-                                board[y][x] = null;
+                                board[x][y] = null;
                                // System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                             }
                         }
@@ -95,14 +95,14 @@ public class CheckersBoard
                     {
                         if (x % 2 == 0)
                         {
-                            board[y][x] = new CheckersPiece(CP2P, this, x, y, boardPanel);
-                            pieceList[i] = board[y][x];
+                            board[x][y] = new CheckersPiece(CP2P, this, x, y, boardPanel);
+                            pieceList[i] = board[x][y];
                             i++;
                             //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                         }
                         else
                         {
-                            board[y][x] = null;
+                            board[x][y] = null;
                             //System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                         }
                     }
@@ -112,14 +112,14 @@ public class CheckersBoard
                         {
                             if (x % 2 == 0)
                             {
-                                board[y][x] = new CheckersPiece(P1P, this, x, y, boardPanel);
-                                pieceList[i] = board[y][x];
+                                board[x][y] = new CheckersPiece(P1P, this, x, y, boardPanel);
+                                pieceList[i] = board[x][y];
                                 i++;
                                 //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
                             }
                             else
                             {
-                                board[y][x] = null;
+                                board[x][y] = null;
                                 //System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                             }
                         }

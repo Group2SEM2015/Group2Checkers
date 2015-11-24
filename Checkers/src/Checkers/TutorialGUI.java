@@ -224,14 +224,14 @@ public class TutorialGUI
         }
         boardLayer.add(checkerBoardPanel, Integer.valueOf(1));
         int layer = 30;
-        for(int i = 0; i<8; i++){
-            for(int j = 0; j<8; j++){
-                if(tmp[i][j] != null){
-                    dx = tmp[i][j].getDrawX();
-                    dy = tmp[i][j].getDrawY();
-                    dfill = tmp[i][j].getDrawFill();
-                    tmp[i][j].setBounds(dx,dy,dfill,dfill);
-                    boardLayer.add(tmp[i][j],Integer.valueOf(layer));
+        for(int y = 0; y<8; y++){
+            for(int x = 0; x<8; x++){
+                if(tmp[x][y] != null){
+                    dx = tmp[x][y].getDrawX();
+                    dy = tmp[x][y].getDrawY();
+                    dfill = tmp[x][y].getDrawFill();
+                    tmp[x][y].setBounds(dx,dy,dfill,dfill);
+                    boardLayer.add(tmp[x][y],Integer.valueOf(layer));
                 }
             }
         }

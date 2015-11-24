@@ -165,7 +165,7 @@ public class CheckersPiece extends JPanel
                 System.out.println("Invalid piece type.");
                 return false;
         }
-
+        System.out.println("Moved to: "+x+":"+y);
         boardControl.flipTurn();
         boardControl.setBoard(board);
         return true;
@@ -399,7 +399,11 @@ public class CheckersPiece extends JPanel
      *
      * Determines the direction that a piece wants to move to.
      *
-     * Legend: NW : 1 NE : 2 SE : 3 SW : 4
+     * Legend: 
+     * NW : 1 
+     * NE : 2 
+     * SE : 3 
+     * SW : 4
      *
      * @param xi Initial x position of the Checker piece.
      * @param yi Initial y position of the Checker piece.
@@ -468,10 +472,12 @@ public class CheckersPiece extends JPanel
     }
     
     public int getDrawX(){
+        calculatePosition();
         return px;
     }
     
     public int getDrawY(){
+        calculatePosition();
         return py;
     }
     
