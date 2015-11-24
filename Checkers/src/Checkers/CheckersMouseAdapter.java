@@ -47,13 +47,15 @@ public class CheckersMouseAdapter extends MouseAdapter{
         int moveX, moveY;
         int x = piece.getDrawX();
         int y = piece.getDrawY();
+        boolean test;
         x += e.getX();
         y += e.getY();
         piece.setDrawX(x);
         piece.setDrawY(y);
         moveX = convertX(x);
         moveY = convertY(y);
-        piece.movePiece(moveX, moveY);
+        test = piece.movePiece(moveX, moveY);
+        System.out.println("Move: "+test);
         piece.dragFlip();
         piece.setLocation(x, y);
     }

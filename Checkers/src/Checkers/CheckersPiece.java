@@ -82,7 +82,7 @@ public class CheckersPiece extends JPanel
         int direction = determineDirection(x, y, xdest, ydest);
         double distance = moveDistanceLin(x, y, xdest, ydest);
         int piece = board[x][y].getPieceType();
-
+        /*
         switch (piece)
         {
             case 1:
@@ -163,6 +163,10 @@ public class CheckersPiece extends JPanel
                 System.out.println("Invalid piece type.");
                 return false;
         }
+        */
+        board[xdest][ydest] = this;
+        x = xdest;
+        y = ydest;
         System.out.println("Moved to: "+x+":"+y);
         boardControl.flipTurn();
         boardControl.setBoard(board);
