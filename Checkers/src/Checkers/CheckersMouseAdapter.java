@@ -20,6 +20,9 @@ public class CheckersMouseAdapter extends MouseAdapter{
     private final JPanel boardPanel;
     private final int BOARDEDGE = 8;
     
+    private int xi = 0;
+    private int yi = 0;
+    
     public CheckersMouseAdapter(){
         chkBrd = null;
         board = null;
@@ -37,6 +40,9 @@ public class CheckersMouseAdapter extends MouseAdapter{
     
     @Override
     public void mousePressed(MouseEvent e){
+        CheckersPiece piece = board[index];
+        xi = piece.getDrawX();
+        yi = piece.getDrawY();
         board[index].dragFlip();
     }
     
@@ -47,24 +53,29 @@ public class CheckersMouseAdapter extends MouseAdapter{
         int moveX, moveY;
         int x = piece.getDrawX();
         int y = piece.getDrawY();
-        boolean test;
         x += e.getX();
         y += e.getY();
         piece.setDrawX(x);
         piece.setDrawY(y);
         moveX = convertX(x);
         moveY = convertY(y);
-        test = piece.movePiece(moveX, moveY);
-        System.out.println("Move: "+test);
+        piece.movePiece(moveX, moveY);
         piece.dragFlip();
         piece.setLocation(x, y);
+        System.out.println(x+":"+y+" on "+moveX +":"+moveY);
     }
     
     @Override
     public void mouseDragged(MouseEvent e){
-        //int x = e.getX();
-        //int y = e.getY();
-        //board[index].dragFlip();
+        CheckersPiece piece = board[index];
+        int x = piece.getDrawX();
+        int y = piece.getDrawY();
+        int offset = piece.getDrawFill()/2;
+        x += e.getX();
+        y += e.getY();
+        piece.setDrawX(x-offset);
+        piece.setDrawY(y-offset);
+        piece.setLocation(x-offset, y-offset);
     }
     
     private int convertX(int x){

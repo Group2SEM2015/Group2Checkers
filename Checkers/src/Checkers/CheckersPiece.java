@@ -50,14 +50,13 @@ public class CheckersPiece extends JPanel
     private void calculatePosition(){
         if(!drag){
             Dimension xy = boardPanel.getSize();
-            px = (((int) xy.getWidth()) /BOARDEDGE) *x;
-            py = (((int) xy.getHeight())/BOARDEDGE) *y;
+            px = (((int) xy.getWidth()) /BOARDEDGE) * x;
+            py = (((int) xy.getHeight())/BOARDEDGE) * y;
             px += OFFSET;
             py += OFFSET;
             pfill = ((int) (xy.getWidth()))/BOARDEDGE;
             pfill -= OFFSET * 2; //OFFSET variable only accounts for one side
         }
-        
     }
 
     /**
@@ -90,8 +89,7 @@ public class CheckersPiece extends JPanel
             board[x][y] = null;
             x = xdest;
             y = ydest;
-            //System.out.println("Moved to: "+x+":"+y);
-        }else if(distance == 2){
+        }else if(distance == 2 && canJump(x, y, xdest, ydest)){
             jump(x,y,xdest,ydest,direction);
         }else{
             return false;
@@ -119,69 +117,50 @@ public class CheckersPiece extends JPanel
     {
         int piece = board[xi][yi].getPieceType();
         int oppIndex; //Index of opponent object in JLayeredPane display
-
+        
         switch (direction)
         {
             case NW:
                 if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
-                    board[xdest][ydest] = this;
                     oppIndex = display.getIndexOf(board[xdest + 1][ydest + 1]);
                     display.remove(oppIndex);
                     board[xdest + 1][ydest + 1] = null;
-                    board[xi][yi] = null;
-                    x = xdest;
-                    y = ydest;
-                    checkJumpOptions();
-                    return true;
                 }
                 break;
             case NE:
                 if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
-                    board[xdest][ydest] = this;
                     oppIndex = display.getIndexOf(board[xdest - 1][ydest + 1]);
                     display.remove(oppIndex);
                     board[xdest - 1][ydest + 1] = null;
-                    board[xi][yi] = null;
-                    x = xdest;
-                    y = ydest;
-                    checkJumpOptions();
-                    return true;
                 }
                 break;
             case SE:
                 if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
-                    board[xdest][ydest] = this;
                     oppIndex = display.getIndexOf(board[xdest - 1][ydest - 1]);
                     display.remove(oppIndex);
                     board[xdest - 1][ydest - 1] = null;
-                    board[xi][yi] = null;
-                    x = xdest;
-                    y = ydest;
-                    checkJumpOptions();
-                    return true;
                 }
                 break;
             case SW:
                 if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
-                    board[xdest][ydest] = this;
                     oppIndex = display.getIndexOf(board[xdest + 1][ydest - 1]);
                     display.remove(oppIndex);
                     board[xdest + 1][ydest - 1] = null;
-                    board[xi][yi] = null;
-                    x = xdest;
-                    y = ydest;
-                    checkJumpOptions();
-                    return true;
                 }
                 break;
             default:
         }
-
-        return false;
+        board[xdest][ydest] = this;
+        display.repaint();
+        board[xi][yi] = null;
+        x = xdest;
+        y = ydest;
+        checkJumpOptions();
+        return true;
     }
 
     /**
@@ -289,12 +268,15 @@ public class CheckersPiece extends JPanel
      */
     private boolean canJump(int xi, int yi, int xdest, int ydest)
     {
-        if (xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE)
-        {
-            return false;
-        }
+        
         int piece = board[xi][yi].getPieceType();
         int direction = determineDirection(xi, yi, xdest, ydest);
+        
+        if (xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE
+                || board[xdest][ydest] != null || !canDir(direction, piece)){
+            System.out.println("Failing");
+            return false;
+        }
 
         switch (direction)
         {
@@ -365,7 +347,6 @@ public class CheckersPiece extends JPanel
         double yChange = Math.abs(yi-ydest);
         double xDistance = xChange / 2;
         double yDistance = yChange / 2;
-        System.out.println(xDistance+":"+yDistance);
         return xChange/yChange == 1 ? xDistance + yDistance : 0.00;
     }
 
@@ -466,6 +447,15 @@ public class CheckersPiece extends JPanel
         py = newY;
     }
     
+    /**
+     * Method getDrag
+     * 
+     * Description: An accessor method for the drag boolean.
+     * @return the value in the drag boolean.
+     */
+    public boolean getDrag(){
+        return drag;
+    }
     /**
      * Method dragFlip
      * 

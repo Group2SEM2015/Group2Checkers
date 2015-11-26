@@ -236,9 +236,11 @@ public class TutorialGUI
             }
         }
         
-        for(int i = 0; i < 24; i++){ //8 = BOARDEDGE
-            pieceList[i].addMouseListener(new CheckersMouseAdapter(pieceList,
-                    cb,i, checkerBoardPanel));
+        for(int i = 0; i < 24; i++){ //24 = PIECEMAX
+            CheckersMouseAdapter adap = new CheckersMouseAdapter(pieceList,
+                    cb,i, checkerBoardPanel);
+            pieceList[i].addMouseListener(adap);
+            pieceList[i].addMouseMotionListener(adap);
         }
         
     }
