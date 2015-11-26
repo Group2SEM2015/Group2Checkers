@@ -20,9 +20,6 @@ public class CheckersMouseAdapter extends MouseAdapter{
     private final JPanel boardPanel;
     private final int BOARDEDGE = 8;
     
-    private int xi = 0;
-    private int yi = 0;
-    
     public CheckersMouseAdapter(){
         chkBrd = null;
         board = null;
@@ -41,8 +38,6 @@ public class CheckersMouseAdapter extends MouseAdapter{
     @Override
     public void mousePressed(MouseEvent e){
         CheckersPiece piece = board[index];
-        xi = piece.getDrawX();
-        yi = piece.getDrawY();
         board[index].dragFlip();
     }
     
@@ -62,7 +57,6 @@ public class CheckersMouseAdapter extends MouseAdapter{
         piece.movePiece(moveX, moveY);
         piece.dragFlip();
         piece.setLocation(x, y);
-        System.out.println(x+":"+y+" on "+moveX +":"+moveY);
     }
     
     @Override
@@ -79,18 +73,14 @@ public class CheckersMouseAdapter extends MouseAdapter{
     }
     
     private int convertX(int x){
-        //System.out.println("raw x: "+x);
         int w = (int) boardPanel.getWidth();
         x = (x)/(w/BOARDEDGE);
-        //System.out.println("converted x: "+x);
         return x;
     }
     
     private int convertY(int y){
-        //System.out.println("raw y: "+y);
         int h = (int) boardPanel.getHeight();
         y = (y)/(h/BOARDEDGE);
-        //System.out.println("converted y: "+y);
         return y;
     }
 }

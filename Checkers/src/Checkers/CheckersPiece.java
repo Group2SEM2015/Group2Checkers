@@ -10,6 +10,7 @@ public class CheckersPiece extends JPanel
     private int x, y, pieceType;
     private int px, py; //Used for the x and y locations of the paint method
     private int pfill;  //Used for the fill width and height of Oval
+    private int kingFill;
     private CheckersPiece[][] board;
     private CheckersBoard boardControl;
     private JPanel boardPanel;
@@ -26,6 +27,10 @@ public class CheckersPiece extends JPanel
     final int CP2P = 3;     //CPU/Player 2 Piece
     final int CP2K = 4;     //CPU/Player 2 King
     final int OFFSET = 10;
+    final int KING_OFFSET = 10;
+    final Color P1KCOLOR = new Color(255,165,0);
+    final Color CP2KCOLOR = new Color(140,140,140);
+    final Color NAVY = new Color(22,145,217); //Navy Blue
 
     public CheckersPiece(int pieceType, CheckersBoard boardControl,
             int x, int y, JPanel boardPanel, JLayeredPane display)
@@ -94,6 +99,7 @@ public class CheckersPiece extends JPanel
         }else{
             return false;
         }
+        checkKing();
         boardControl.flipTurn();
         boardControl.setBoard(board);
         return true;
@@ -390,6 +396,28 @@ public class CheckersPiece extends JPanel
             }
         }
     }
+    
+    /**
+     * Method checkKing
+     * 
+     * Description: Checks if the piece is in the position to become king, and
+     * changes the piece type to king if it is.
+     */
+    private void checkKing(){
+        switch(pieceType){
+            case P1P:
+                if(y == 0){
+                    pieceType = P1K;
+                }
+                break;
+            case CP2P:
+                if(y == BOARDEDGE-1){
+                    pieceType = CP2K;
+                }
+                break;
+            default:
+        }
+    }
 
     /**
      * Method getPieceType
@@ -423,6 +451,15 @@ public class CheckersPiece extends JPanel
         setLocation(px,py);
         g.setColor(theColor);
         g.fillOval(0, 0, pfill, pfill);
+        if(pieceType == P1K || pieceType == CP2K){
+            if(pieceType == P1K){
+                g.setColor(P1KCOLOR);
+            }else{
+                g.setColor(CP2KCOLOR);
+            }
+            kingFill = pfill-(KING_OFFSET * 2);
+            g.fillOval(KING_OFFSET, KING_OFFSET, kingFill, kingFill);
+        }
     }
     
     public int getDrawX(){
