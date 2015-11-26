@@ -90,93 +90,12 @@ public class CheckersPiece extends JPanel
             board[x][y] = null;
             x = xdest;
             y = ydest;
-            System.out.println("Moved to: "+x+":"+y);
+            //System.out.println("Moved to: "+x+":"+y);
         }else if(distance == 2){
             jump(x,y,xdest,ydest,direction);
+        }else{
+            return false;
         }
-        
-        /*
-        switch (piece)
-        {
-            case 1:
-                if (direction <= NE)
-                {
-                    if (distance == 1.0 && board[xdest][ydest] == null
-                            && boardControl.getTurnsRepeated() == 0)
-                    {
-                        board[x][y] = null;
-                        board[xdest][ydest] = this;
-                        x = xdest;
-                        y = ydest;
-                    }
-                    else
-                    {
-                        if (distance == 2.0)
-                        {
-                            jump(x, y, xdest, ydest, direction);
-                        }
-                    }
-                }
-                break;
-            case 2:
-                if (distance == 1.0 && board[xdest][ydest] == null
-                        && boardControl.getTurnsRepeated() == 0)
-                {
-                    board[x][y] = null;
-                    board[xdest][ydest] = this;
-                    x = xdest;
-                    y = ydest;
-                }
-                else
-                {
-                    if (distance == 2.0)
-                    {
-                        jump(x, y, xdest, ydest, direction);
-                    }
-                }
-                break;
-            case 3:
-                if (direction >= SE)
-                {
-                    if (distance == 1.0 && board[xdest][ydest] == null
-                            && boardControl.getTurnsRepeated() == 0)
-                    {
-                        board[x][y] = null;
-                        board[xdest][ydest] = this;
-                        x = xdest;
-                        y = ydest;
-                    }
-                    else
-                    {
-                        if (distance == 2.0)
-                        {
-                            jump(x, y, xdest, ydest, direction);
-                        }
-                    }
-                }
-                break;
-            case 4:
-                if (distance == 1.0 && board[xdest][ydest] == null
-                        && boardControl.getTurnsRepeated() == 0)
-                {
-                    board[x][y] = null;
-                    board[xdest][ydest] = this;
-                    x = xdest;
-                    y = ydest;
-                }
-                else
-                {
-                    if (distance == 2.0)
-                    {
-                        jump(x, y, xdest, ydest, direction);
-                    }
-                }
-                break;
-            default:
-                System.out.println("Invalid piece type.");
-                return false;
-        }
-        */
         boardControl.flipTurn();
         boardControl.setBoard(board);
         return true;
@@ -210,6 +129,7 @@ public class CheckersPiece extends JPanel
                     oppIndex = display.getIndexOf(board[xdest + 1][ydest + 1]);
                     display.remove(oppIndex);
                     board[xdest + 1][ydest + 1] = null;
+                    board[xi][yi] = null;
                     x = xdest;
                     y = ydest;
                     checkJumpOptions();
@@ -223,6 +143,7 @@ public class CheckersPiece extends JPanel
                     oppIndex = display.getIndexOf(board[xdest - 1][ydest + 1]);
                     display.remove(oppIndex);
                     board[xdest - 1][ydest + 1] = null;
+                    board[xi][yi] = null;
                     x = xdest;
                     y = ydest;
                     checkJumpOptions();
@@ -233,9 +154,10 @@ public class CheckersPiece extends JPanel
                 if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
                     board[xdest][ydest] = this;
-                    oppIndex = display.getIndexOf(board[xdest + 1][ydest - 1]);
+                    oppIndex = display.getIndexOf(board[xdest - 1][ydest - 1]);
                     display.remove(oppIndex);
-                    board[xdest + 1][ydest - 1] = null;
+                    board[xdest - 1][ydest - 1] = null;
+                    board[xi][yi] = null;
                     x = xdest;
                     y = ydest;
                     checkJumpOptions();
@@ -246,9 +168,10 @@ public class CheckersPiece extends JPanel
                 if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
                 {
                     board[xdest][ydest] = this;
-                    oppIndex = display.getIndexOf(board[xdest - 1][ydest - 1]);
+                    oppIndex = display.getIndexOf(board[xdest + 1][ydest - 1]);
                     display.remove(oppIndex);
-                    board[xdest - 1][ydest - 1] = null;
+                    board[xdest + 1][ydest - 1] = null;
+                    board[xi][yi] = null;
                     x = xdest;
                     y = ydest;
                     checkJumpOptions();
@@ -273,21 +196,21 @@ public class CheckersPiece extends JPanel
         switch (pieceType)
         {
             case P1P:
-                if (canJump(x, y, x - 1, y - 1) || canJump(x, y, x + 1, y - 1))
+                if (canJump(x, y, x - 2, y - 2) || canJump(x, y, x + 2, y - 2))
                 {
                     boardControl.flipTurn();
                 }
                 break;
             case CP2K:
             case P1K:
-                if (canJump(x, y, x - 1, y - 1) || canJump(x, y, x + 1, y - 1)
-                        || canJump(x, y, x - 1, y + 1) || canJump(x, y, x + 1, y + 1))
+                if (canJump(x, y, x - 2, y - 2) || canJump(x, y, x + 2, y - 2)
+                        || canJump(x, y, x - 2, y + 2) || canJump(x, y, x + 2, y + 2))
                 {
                     boardControl.flipTurn();
                 }
                 break;
             case CP2P:
-                if (canJump(x, y, x - 1, y + 1) || canJump(x, y, x + 1, y + 1))
+                if (canJump(x, y, x - 2, y + 2) || canJump(x, y, x + 2, y + 2))
                 {
                     boardControl.flipTurn();
                 }
@@ -320,7 +243,13 @@ public class CheckersPiece extends JPanel
      * Method canDir
      *
      * Determines whether a given piece can move towards the given direction.
-     *
+     * 
+     * Legend:
+     * NW = 1
+     * NE = 2
+     * SE = 3
+     * SW = 4
+     * 
      * @param direction The direction the piece wants to move to.
      * @param piece The piece that wants to move.
      * @return True if the piece can move in that direction, false otherwise.
@@ -374,9 +303,9 @@ public class CheckersPiece extends JPanel
             case NE:
                 return opponentPiece(board[xdest - 1][ydest + 1], piece);
             case SE:
-                return opponentPiece(board[xdest + 1][ydest - 1], piece);
-            case SW:
                 return opponentPiece(board[xdest - 1][ydest - 1], piece);
+            case SW:
+                return opponentPiece(board[xdest + 1][ydest - 1], piece);
             default:
         }
 
@@ -464,8 +393,7 @@ public class CheckersPiece extends JPanel
             if (yi > ydest)
             {
                 return NW;
-            }
-            else
+            }else
             {
                 return SW;
             }
@@ -475,8 +403,7 @@ public class CheckersPiece extends JPanel
             if (yi > ydest)
             {
                 return NE;
-            }
-            else
+            }else
             {
                 return SE;
             }
@@ -499,8 +426,8 @@ public class CheckersPiece extends JPanel
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g); //must call the parent's paint method before drawing the piece
-        Color theColor; //Will soon have the color of the CheckersPiece
-        if(pieceType <= 2)
+        Color theColor; //Color of the CheckersPiece
+        if(pieceType <= P1K) //If the piece is Player 1 King or Piece
         {
             theColor = Color.YELLOW;
         }
