@@ -10,7 +10,7 @@ public class TutorialGUI
 {
 
     public JFrame tutorial = new JFrame("Tutorial Window");
-    int i = 1;
+    
     public JPanel[][] checkerBoard1;
     public JPanel checkerBoardPanel = new JPanel();
     public JPanel redPanel;
@@ -81,6 +81,7 @@ public class TutorialGUI
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                
                 tips.setText("In this step you will learn the\n"
                         + "basic move function this allows you\n "
                         + "move your checker piece(Red) to a new\n"
@@ -92,7 +93,8 @@ public class TutorialGUI
                         + "The goal to moving pieces is to set\n"
                         + "them up in postions to allow you to\n "
                         + "jump the other players pieces");
-
+               
+                
             }
         });
 
@@ -244,10 +246,10 @@ public class TutorialGUI
         }
         
     }
-
+/*
     public void addChecker()
     {
-        /*
+   
          CheckerPieces checker = new CheckerPieces();
          checker.white11X = X11;
          checker.white11Y = Y11;
@@ -258,7 +260,7 @@ public class TutorialGUI
          //checkerBoard1[0][0].add(tips, BorderLayout.CENTER);
          //checkerBoard1[0][0].setBackground(Color.yellow);
          //checkerBoard1[0][0].add("what the fuck", BorderLayout.CENTER);
-         checkerBoard1[0][0].add(tmp, BorderLayout.CENTER);*/
+         checkerBoard1[0][0].add(tmp, BorderLayout.CENTER);
 
         //checkerBoard1[0][1].setLayout(new BorderLayout());
         //checkerBoard1[0][1].add(new BlackChecker(), BorderLayout.CENTER);
@@ -289,4 +291,5 @@ public class TutorialGUI
         }
     
     }
+    */
 }

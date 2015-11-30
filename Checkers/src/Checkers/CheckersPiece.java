@@ -41,6 +41,7 @@ public class CheckersPiece extends JPanel
         board = boardControl.getBoard();
         this.x = x;
         this.y = y;
+        this.setOpaque(false);
         this.boardPanel = boardPanel;
         calculatePosition();
     }
