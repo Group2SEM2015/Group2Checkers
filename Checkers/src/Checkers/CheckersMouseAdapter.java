@@ -19,12 +19,14 @@ public class CheckersMouseAdapter extends MouseAdapter{
     private final CheckersBoard chkBrd;
     private final JPanel boardPanel;
     private final int BOARDEDGE = 8;
+    private final boolean PLAYER;
     
     public CheckersMouseAdapter(){
         chkBrd = null;
         board = null;
         index = 0;
         boardPanel = null;
+        PLAYER = false;
     }
     
     public CheckersMouseAdapter(CheckersPiece[] board, CheckersBoard chkBrd,
@@ -33,43 +35,50 @@ public class CheckersMouseAdapter extends MouseAdapter{
         this.chkBrd = chkBrd;
         this.index = index;
         this.boardPanel = boardPanel;
+        this.PLAYER = board[index].getPlayer();
     }
     
     @Override
     public void mousePressed(MouseEvent e){
-        CheckersPiece piece = board[index];
-        board[index].dragFlip();
+        if(chkBrd.getTurn() == PLAYER){
+            CheckersPiece piece = board[index];
+            board[index].dragFlip();
+        }
     }
     
     
     @Override
     public void mouseReleased(MouseEvent e){
-        CheckersPiece piece = board[index];
-        int moveX, moveY;
-        int x = piece.getDrawX();
-        int y = piece.getDrawY();
-        x += e.getX();
-        y += e.getY();
-        piece.setDrawX(x);
-        piece.setDrawY(y);
-        moveX = convertX(x);
-        moveY = convertY(y);
-        piece.movePiece(moveX, moveY);
-        piece.dragFlip();
-        piece.setLocation(x, y);
+        if(chkBrd.getTurn() == PLAYER){
+            CheckersPiece piece = board[index];
+            int moveX, moveY;
+            int x = piece.getDrawX();
+            int y = piece.getDrawY();
+            x += e.getX();
+            y += e.getY();
+            piece.setDrawX(x);
+            piece.setDrawY(y);
+            moveX = convertX(x);
+            moveY = convertY(y);
+            piece.movePiece(moveX, moveY);
+            piece.dragFlip();
+            piece.setLocation(x, y);
+        }
     }
     
     @Override
     public void mouseDragged(MouseEvent e){
-        CheckersPiece piece = board[index];
-        int x = piece.getDrawX();
-        int y = piece.getDrawY();
-        int offset = piece.getDrawFill()/2;
-        x += e.getX();
-        y += e.getY();
-        piece.setDrawX(x-offset);
-        piece.setDrawY(y-offset);
-        piece.setLocation(x-offset, y-offset);
+        if(chkBrd.getTurn() == PLAYER){
+            CheckersPiece piece = board[index];
+            int x = piece.getDrawX();
+            int y = piece.getDrawY();
+            int offset = piece.getDrawFill()/2;
+            x += e.getX();
+            y += e.getY();
+            piece.setDrawX(x-offset);
+            piece.setDrawY(y-offset);
+            piece.setLocation(x-offset, y-offset);
+        }
     }
     
     private int convertX(int x){
