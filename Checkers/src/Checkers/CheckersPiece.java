@@ -463,6 +463,10 @@ public class CheckersPiece extends JPanel
         }
     }
     
+    public boolean getPlayer(){
+        return pieceType > P1K;
+    }
+    
     public int getDrawX(){
         calculatePosition();
         return px;
@@ -494,6 +498,7 @@ public class CheckersPiece extends JPanel
     public boolean getDrag(){
         return drag;
     }
+    
     /**
      * Method dragFlip
      * 
