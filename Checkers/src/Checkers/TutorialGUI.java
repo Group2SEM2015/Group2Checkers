@@ -164,8 +164,31 @@ public class TutorialGUI
                         + "in advance to assure your WIN!");
             }
         });
+        next.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+
+            }
+        });
         
-        
+        checkerBoardPanel.addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent e){
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println(x);
+                System.out.println(y);
+                
+            }
+        });
+        checkerBoardPanel.addMouseMotionListener(new MouseMotionAdapter(){
+            public void mouseDragged(MouseEvent e){
+                int x = e.getX();
+                int y = e.getY();
+               // System.out.println(x);
+                //System.out.println(y);
+            }
+        });
     }
     
     public void createCheckerBoard(JPanel checkerBoardPanel)
