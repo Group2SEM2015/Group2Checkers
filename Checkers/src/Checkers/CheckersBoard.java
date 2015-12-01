@@ -33,6 +33,9 @@ public class CheckersBoard
     private boolean p1CanJump = false;
     private boolean p2CanJump = false;
     private boolean lockTurn = false;
+    private boolean p1HasMove = true;
+    private boolean p2HasMove = true;
+    
     
     
     /**
@@ -185,6 +188,8 @@ public class CheckersBoard
         p2CanJump = false;
         p1PieceCnt = 0;
         p2PieceCnt = 0;
+        p1HasMove = true;
+        p2HasMove = true;
     }
     
     /**
@@ -239,18 +244,45 @@ public class CheckersBoard
      *          3:  The game is a draw.
      */
     public int checkWinner(){
+        checkStalemate();
         if(p1PieceCnt <= 0 && p2PieceCnt <= 0){
             System.out.println("Neither players win! They realize friendship is"
                     + " more important!");
             return 3;
-        }else if(p1PieceCnt <= 0){
+        }else if(p1PieceCnt <= 0 || !p2HasMove){
             System.out.println("Player 1 wins!");
             return 1;
-        }else if(p2PieceCnt <= 0){
+        }else if(p2PieceCnt <= 0 || !p1HasMove){
             System.out.println("Player 2 wins!");
             return 2;
         }else{
             return 0;
+        }
+    }
+    
+    /**
+     * Method checkStalemate
+     * 
+     * Description: Checks the state of the game to see if either player can
+     * move. If one player can't make a legal move, their opponent wins.
+     */
+    public void checkStalemate(){
+        p1HasMove = false;
+        p2HasMove = false;
+        for(CheckersPiece piece : pieceList){
+            if(piece.checkMovesExternal()){
+                if(!piece.getPlayer()){
+                    p1HasMove = true;
+                }else{
+                    System.out.println("Piece in "+piece.getX()+":"+piece.getY()+" has set p2HasMove to true.");
+                    p2HasMove = true;
+                }
+            }
+        }
+        if(!p1HasMove){
+            System.out.println("Player 1 does not have a legal move.");
+        }else if(!p2HasMove){
+            System.out.println("Player 2 does not have a legal move.");
         }
     }
 

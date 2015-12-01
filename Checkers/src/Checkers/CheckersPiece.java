@@ -91,10 +91,11 @@ public class CheckersPiece extends JPanel
         int direction = determineDirection(x, y, xdest, ydest);
         double distance = moveDistanceLin(x, y, xdest, ydest);
         int piece = board[x][y].getPieceType();
+        boolean turn = boardControl.getTurn() == PLAYER;
         
-        if(boardControl.checkWinner() > 0){
+        if(boardControl.checkWinner() > 0 && turn){
             return false;
-        }else if(canMove(direction, piece, xdest, ydest) && distance == 1){
+        }else if(canMove(direction, xdest, ydest) && distance == 1){
             board[xdest][ydest] = this;
             board[x][y] = null;
             x = xdest;
@@ -241,13 +242,34 @@ public class CheckersPiece extends JPanel
      * @param ydest the y position of the destination.
      * @return true if both statements are true, false otherwise.
      */
-    private boolean canMove(int direction, int piece, int xdest, int ydest){
+    private boolean canMove(int direction, int xdest, int ydest){
+        if(xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE){
+            return false;
+        }
         boolean mov = board[xdest][ydest] == null;
-        boolean dir = canDir(direction,piece);
-        boolean turn = boardControl.getTurn() == PLAYER;
+        boolean dir = canDir(direction,pieceType);
         boolean jump = hasJumpOption();
         boolean hasToJump = boardControl.getCanJump(PLAYER);
-        return mov && dir && turn && (!jump && !hasToJump);
+        return mov && dir && (!jump && !hasToJump);
+    }
+    
+    /**
+     * Method hasMoveOption
+     * 
+     * Description: Checks if the selected piece can move in any direction.
+     * 
+     * @return true if the piece can move, false otherwise.
+     */
+    public boolean hasMoveOption(){
+        System.out.println("Piece in "+x+":"+y+" for "+ PLAYER);
+        if(canMove(NW, x-1, y-1) || canMove(NE, x+1,y-1) 
+                || canMove(SE, x+1, y+1)
+                || canMove(SW, x-1, y+1)){
+            return true;
+        }else{
+            System.out.println();
+            return false;
+        }
     }
     
     /**
@@ -455,6 +477,25 @@ public class CheckersPiece extends JPanel
         board = boardControl.getBoard();
         if(hasJumpOption()){
             boardControl.flipCanJump(PLAYER, true);
+        }
+    }
+    
+    /**
+     * Method checkMovesExternal
+     * 
+     * Description: Checks to see if the piece can move or jump in any
+     * direction.
+     * 
+     * @return true if the piece can make a legal move, false otherwise.
+     */
+    public boolean checkMovesExternal(){
+        board = boardControl.getBoard();
+        System.out.println("Check for "+PLAYER +" "+pieceType);
+        if(hasMoveOption() || hasJumpOption()){
+            //System.out.println("Piece in "+x+":"+y+" has a move or jump for player "+PLAYER);
+            return true;
+        }else{
+            return false;
         }
     }
     
