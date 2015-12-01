@@ -55,13 +55,12 @@ public class TutorialGUI
 
         tips.setEditable(false);
         tips.setText("Hello and Welcome to the wonderfull\n"
-                + "world ofcheckers. In this tutorial we \n"
-                + "will help youunderstand the basic \n"
+                + "world of checkers. In this tutorial we \n"
+                + "will help you understand the basic \n"
                 + "mechanics of this timless game. \n"
                 + "Let's get started shall we!\n"
-                + "Please Clicked the next button down below\n"
-                + "or select the step you wish to learn in\n"
-                + "the menu above");
+                + "Please select the step you wish to learn\n"
+                + "in the menu above");
 
         tutorial.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -81,18 +80,24 @@ public class TutorialGUI
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                
+                for(int i = 0; i < 12; i++){
+                boardLayer.remove(0);
+                }
                 tips.setText("In this step you will learn the\n"
-                        + "basic move function this allows you\n "
-                        + "move your checker piece(Red) to a new\n"
-                        + "square.\n"
+                        + "basic move function this allows you         \n"
+                        + "move your checker piece(Yellow) to\n"
+                        + "a the next avaible black square.\n"
+                        + "that is in front of your piece\n"
+                        + "diagonally left or right\n"
                         + "To do this please click on the the\n"
-                        + "highlighted checker piece then\n"
-                        + "please drage this piece to the highlighter\n "
-                        + "square. This is the move function.\n"
+                        + "checker piece then drag this piece\n"
+                        + " to one of the black squares\n "
+                        + "This is the move function.\n"
                         + "The goal to moving pieces is to set\n"
                         + "them up in postions to allow you to\n "
-                        + "jump the other players pieces");
+                        + "jump the other players pieces\n"
+                        + "Once this is done please go to the\n"
+                        + "next step in the tutorial step menu\n");
                
                 
             }
@@ -102,12 +107,14 @@ public class TutorialGUI
         step2.addActionListener(new ActionListener()
         {
             @Override
+            
             public void actionPerformed(ActionEvent e)
             {
+                
                 tips.setText("In this step you will learn the\n"
                         + "jump function. The jump allows the\n"
                         + "player to take his/hers oppenets\n"
-                        + "piece. To demostrate this we have set\n"
+                        + "piece. To demostrate this we have set   \n"
                         + "up the board that allows you jump your\n"
                         + "oppenet. Please select the highlighted\n"
                         + "checker piece. And move the checker\n"
