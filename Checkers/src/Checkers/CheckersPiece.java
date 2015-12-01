@@ -17,6 +17,7 @@ public class CheckersPiece extends JPanel
     private boolean drag = false;
     private JLayeredPane display;
 
+    final boolean PLAYER;
     final int BOARDEDGE = 8;
     final int NW = 1;
     final int NE = 2;
@@ -44,6 +45,7 @@ public class CheckersPiece extends JPanel
         this.setOpaque(false);
         this.boardPanel = boardPanel;
         calculatePosition();
+        PLAYER = pieceType > P1K;
     }
     
     /**
@@ -95,7 +97,7 @@ public class CheckersPiece extends JPanel
             board[x][y] = null;
             x = xdest;
             y = ydest;
-        }else if(distance == 2 && canJump(x, y, xdest, ydest)){
+        }else if(distance == 2 && canJump(xdest, ydest)){
             jump(x,y,xdest,ydest,direction);
         }else{
             return false;
@@ -103,6 +105,7 @@ public class CheckersPiece extends JPanel
         checkKing();
         boardControl.flipTurn();
         boardControl.setBoard(board);
+        boardControl.checkJumps();
         return true;
     }
     
@@ -128,34 +131,38 @@ public class CheckersPiece extends JPanel
         switch (direction)
         {
             case NW:
-                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xdest, ydest))
                 {
                     oppIndex = display.getIndexOf(board[xdest + 1][ydest + 1]);
                     display.remove(oppIndex);
+                    boardControl.deletePiece(board[xdest+1][ydest+1]);
                     board[xdest + 1][ydest + 1] = null;
                 }
                 break;
             case NE:
-                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xdest, ydest))
                 {
                     oppIndex = display.getIndexOf(board[xdest - 1][ydest + 1]);
                     display.remove(oppIndex);
+                    boardControl.deletePiece(board[xdest-1][ydest+1]);
                     board[xdest - 1][ydest + 1] = null;
                 }
                 break;
             case SE:
-                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xdest, ydest))
                 {
                     oppIndex = display.getIndexOf(board[xdest - 1][ydest - 1]);
                     display.remove(oppIndex);
+                    boardControl.deletePiece(board[xdest-1][ydest-1]);
                     board[xdest - 1][ydest - 1] = null;
                 }
                 break;
             case SW:
-                if (canDir(direction, piece) && canJump(xi, yi, xdest, ydest))
+                if (canDir(direction, piece) && canJump(xdest, ydest))
                 {
                     oppIndex = display.getIndexOf(board[xdest + 1][ydest - 1]);
                     display.remove(oppIndex);
+                    boardControl.deletePiece(board[xdest+1][ydest-1]);
                     board[xdest + 1][ydest - 1] = null;
                 }
                 break;
@@ -179,30 +186,43 @@ public class CheckersPiece extends JPanel
      */
     private void checkJumpOptions()
     {
-        switch (pieceType)
-        {
+        if(hasJumpOption()){
+            boardControl.flipTurn();
+        }
+    }
+    
+    /**
+     * Method hasJumpOption
+     * 
+     * Determines if a jump is possible from the piece's current location.
+     * 
+     * @return 
+     */
+    public boolean hasJumpOption(){
+        switch (pieceType){
             case P1P:
-                if (canJump(x, y, x - 2, y - 2) || canJump(x, y, x + 2, y - 2))
+                if (canJump(x - 2, y - 2) || canJump(x + 2, y - 2))
                 {
-                    boardControl.flipTurn();
+                    return true;
                 }
                 break;
             case CP2K:
             case P1K:
-                if (canJump(x, y, x - 2, y - 2) || canJump(x, y, x + 2, y - 2)
-                        || canJump(x, y, x - 2, y + 2) || canJump(x, y, x + 2, y + 2))
+                if (canJump(x - 2, y - 2) || canJump(x + 2, y - 2)
+                        || canJump(x - 2, y + 2) || canJump(x + 2, y + 2))
                 {
-                    boardControl.flipTurn();
+                    return true;
                 }
                 break;
             case CP2P:
-                if (canJump(x, y, x - 2, y + 2) || canJump(x, y, x + 2, y + 2))
+                if (canJump(x - 2, y + 2) || canJump(x + 2, y + 2))
                 {
-                    boardControl.flipTurn();
+                    return true;
                 }
                 break;
             default:
         }
+        return false;
     }
 
     /**
@@ -221,8 +241,10 @@ public class CheckersPiece extends JPanel
     private boolean canMove(int direction, int piece, int xdest, int ydest){
         boolean mov = board[xdest][ydest] == null;
         boolean dir = canDir(direction,piece);
-        boolean turn = boardControl.getTurnsRepeated() == 0;
-        return mov && dir && turn;
+        boolean turn = boardControl.getTurn() == PLAYER;
+        boolean jump = hasJumpOption();
+        boolean hasToJump = boardControl.getCanJump(PLAYER);
+        return mov && dir && turn && (!jump && !hasToJump);
     }
     
     /**
@@ -273,15 +295,14 @@ public class CheckersPiece extends JPanel
      * @param ydest The final y position of the acting piece.
      * @return True if a jump can be performed, false otherwise.
      */
-    private boolean canJump(int xi, int yi, int xdest, int ydest)
+    private boolean canJump(int xdest, int ydest)
     {
-        
-        int piece = board[xi][yi].getPieceType();
-        int direction = determineDirection(xi, yi, xdest, ydest);
+        int piece = board[x][y].getPieceType();
+        int direction = determineDirection(x, y, xdest, ydest);
         
         if (xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE
                 || board[xdest][ydest] != null || !canDir(direction, piece)){
-            System.out.println("Failing");
+            //System.out.println("Failing");
             return false;
         }
 
@@ -420,6 +441,20 @@ public class CheckersPiece extends JPanel
         }
     }
 
+    /**
+     * Method checkJumpsExternal
+     * 
+     * Description: Checks if the piece can jump and calls the CheckersBoard's
+     * flipCanJump method to set it to true or false depending on whether this
+     * piece can jump.
+     */
+    public void checkJumpsExternal(){
+        board = boardControl.getBoard();
+        if(hasJumpOption()){
+            boardControl.flipCanJump(PLAYER, true);
+        }
+    }
+    
     /**
      * Method getPieceType
      *

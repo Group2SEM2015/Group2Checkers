@@ -26,6 +26,8 @@ public class CheckersBoard
     private int turnsRepeated = 0;
     private JPanel boardPanel;
     private JLayeredPane display;
+    private boolean p1CanJump = false;
+    private boolean p2CanJump = false;
     
     
     /**
@@ -164,17 +166,35 @@ public class CheckersBoard
         }
         return result;
     }
-
+    
     /**
-     * Method getTurnsRepeated
-     *
-     * An accessor method for the variable turnsRepeated.
-     *
-     * @return the value stored in turnsRepeated.
+     * Method checkJumps
+     * 
+     * Description: Called by the pieces after they move to see if any piece
+     * can jump. If they can, that respective player's canJump boolean will
+     * be flipped to reflect whether or not there is a piece in their possession
+     * that can jump.
      */
-    public int getTurnsRepeated()
-    {
-        return turnsRepeated;
+    public void checkJumps(){
+        p1CanJump = false;
+        p2CanJump = false;
+        for(CheckersPiece piece : pieceList){
+            if(piece != null){
+                piece.checkJumpsExternal();
+            }
+        }
+    }
+    
+    /**
+     * Method deletePiece
+     * @param piece 
+     */
+    public void deletePiece(CheckersPiece piece){
+        for(int i = 0; i < pieceList.length; i++){
+            if(pieceList[i] == piece){
+                pieceList[i] = null;
+            }
+        }
     }
 
     /**
@@ -209,6 +229,39 @@ public class CheckersBoard
     public void flipTurn()
     {
         turn = !turn;
+    }
+    
+    /**
+     * Method flipCanJump
+     * 
+     * Description: Flips the p1CanJump or p2CanJump booleans depending on which
+     * player is calling this method.
+     * 
+     * @param player The player who is calling this method.
+     */
+    public void flipCanJump(boolean player, boolean canJump){
+        if(!player){ //player 1
+            p1CanJump = canJump;
+        }else{
+            p2CanJump = canJump;
+        }
+    }
+    
+    /**
+     * method getCanJump
+     * 
+     * Description: An accessor method for the p1CanJump and p2CanJump booleans.
+     * The boolean returned depends on the player who called the method.
+     * 
+     * @param player The player who is calling this method.
+     * @return p1canJump if player 1 called the method, p2CanJump otherwise.
+     */
+    public boolean getCanJump(boolean player){
+        if(!player){
+            return p1CanJump;
+        }else{
+            return p2CanJump;
+        }
     }
 
     /**

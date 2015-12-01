@@ -56,12 +56,19 @@ public class CheckersMouseAdapter extends MouseAdapter{
             int y = piece.getDrawY();
             x += e.getX();
             y += e.getY();
-            piece.setDrawX(x);
-            piece.setDrawY(y);
-            moveX = convertX(x);
-            moveY = convertY(y);
-            piece.movePiece(moveX, moveY);
-            piece.dragFlip();
+            if(x>=0 && x<boardPanel.getWidth() && y>=0
+                    && y<boardPanel.getHeight()){
+                piece.setDrawX(x);
+                piece.setDrawY(y);
+                moveX = convertX(x);
+                moveY = convertY(y);
+                piece.movePiece(moveX, moveY);
+                piece.dragFlip();
+            }else{
+                piece.dragFlip();
+                x = piece.getDrawX();
+                y = piece.getDrawY();
+            }
             piece.setLocation(x, y);
         }
     }
@@ -75,21 +82,36 @@ public class CheckersMouseAdapter extends MouseAdapter{
             int offset = piece.getDrawFill()/2;
             x += e.getX();
             y += e.getY();
-            piece.setDrawX(x-offset);
-            piece.setDrawY(y-offset);
-            piece.setLocation(x-offset, y-offset);
+            if(x>=0 && x<boardPanel.getWidth() && y>=0
+                    && y<boardPanel.getHeight()){
+                piece.setDrawX(x-offset);
+                piece.setDrawY(y-offset);
+                piece.setLocation(x-offset, y-offset);
+            }
         }
     }
     
     private int convertX(int x){
         int w = (int) boardPanel.getWidth();
         x = (x)/(w/BOARDEDGE);
-        return x;
+        if(x >= BOARDEDGE){
+            return BOARDEDGE-1;
+        }else if(x < 0){
+            return 0;
+        }else{
+            return x;
+        }
     }
     
     private int convertY(int y){
         int h = (int) boardPanel.getHeight();
         y = (y)/(h/BOARDEDGE);
-        return y;
+        if(y >= BOARDEDGE){
+            return BOARDEDGE-1;
+        }else if(y < 0){
+            return 0;
+        }else{
+            return y;
+        }
     }
 }
