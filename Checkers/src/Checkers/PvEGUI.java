@@ -1,6 +1,6 @@
 package Checkers;
 import java.awt.*;
-import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class PvEGUI {
@@ -42,7 +42,7 @@ public class PvEGUI {
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
         checkerBoardPanel.setSize(650, 612);
         CheckersBoard cb = new CheckersBoard(checkerBoardPanel, boardLayer);
-        final CheckersPiece[] pieceList = cb.getPieceList();
+        ArrayList<CheckersPiece> pieceList = cb.getPieceList();
         CheckersPiece[][] tmp = cb.getBoard();
         
         for (int i = 0; i < 8; i++)
@@ -82,12 +82,12 @@ public class PvEGUI {
             }
         }
         
-        for(int i = 0; i < 24; i++){ //24 = PIECEMAX
+        for(CheckersPiece piece : pieceList){
             CheckersMouseAdapter adap = new CheckersMouseAdapter(
-                        pieceList[i],cb,checkerBoardPanel);
-            pieceList[i].addMouseListener(adap);
-            pieceList[i].addMouseMotionListener(adap);
-        }
+                        piece,cb,checkerBoardPanel);
+            piece.addMouseListener(adap);
+            piece.addMouseMotionListener(adap);
+        }  
         
     }
 }

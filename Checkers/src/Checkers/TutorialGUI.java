@@ -1,14 +1,14 @@
 package Checkers;
 
 import java.awt.*;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class TutorialGUI
 {
-
+    final boolean PLAYER_ONE = false;
+    final boolean PLAYER_TWO = true;
     public JFrame tutorial = new JFrame("Tutorial Window");
     
     public JPanel[][] checkerBoard1;
@@ -107,6 +107,7 @@ public class TutorialGUI
                 createPiece(tmp, 4, 5, 1);
                 //TODO: Lock win condition
                 cb.setBoard(tmp);
+                cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
                 
             }
@@ -142,6 +143,7 @@ public class TutorialGUI
                 createPiece(tmp, 3, 4, 3);
                 //TODO: Lock win condition
                 cb.setBoard(tmp);
+                cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
             }
         });
@@ -176,6 +178,7 @@ public class TutorialGUI
                 createPiece(tmp, 4, 1, 1);
                 //TODO: Lock win condition
                 cb.setBoard(tmp);
+                cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
 
             }
@@ -194,6 +197,7 @@ public class TutorialGUI
                 createPiece(tmp, 1, 2, 3);
                 //TODO: Lock win condition
                 cb.setBoard(tmp);
+                cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
                 
             }
@@ -218,6 +222,7 @@ public class TutorialGUI
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createWinTutorialBoard(tmp);
                 cb.setBoard(tmp);
+                cb.unlockTurns();
                 boardLayer.repaint();
                 
                 
@@ -250,26 +255,29 @@ public class TutorialGUI
         });
     }
     
-    private void createPiece(CheckersPiece[][] tmp, int x, int y, int type){
-        tmp[x][y] = new CheckersPiece(type,cb,x,y,checkerBoardPanel,boardLayer);
-        int dx = tmp[x][y].getDrawX();
-        int dy = tmp[x][y].getDrawY();
-        int dfill = tmp[x][y].getDrawFill();
-        tmp[x][y].setBounds(dx,dy,dfill,dfill);
+    private void createPiece(CheckersPiece[][] board, int x, int y, int type){
+        board[x][y] = new CheckersPiece(type,cb,x,y,checkerBoardPanel,boardLayer);
+        int dx = board[x][y].getDrawX();
+        int dy = board[x][y].getDrawY();
+        int dfill = board[x][y].getDrawFill();
+        board[x][y].setBounds(dx,dy,dfill,dfill);
         CheckersMouseAdapter adap = new CheckersMouseAdapter(
-                tmp[x][y],cb,checkerBoardPanel);
-        tmp[x][y].addMouseListener(adap);
-        tmp[x][y].addMouseMotionListener(adap);
-        boardLayer.add(tmp[x][y],Integer.valueOf(2));
+                board[x][y],cb,checkerBoardPanel);
+        board[x][y].addMouseListener(adap);
+        board[x][y].addMouseMotionListener(adap);
+        cb.addPiece(board[x][y]);
+        boardLayer.add(board[x][y],Integer.valueOf(2));
     }
+    
     public void createCheckerBoard(JPanel checkerBoardPanel)
     {
         int dx,dy, dfill;
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
         checkerBoardPanel.setSize(650, 612);
-        final CheckersPiece[] pieceList = cb.getPieceList();
+        ArrayList<CheckersPiece> pieceList = cb.getPieceList();
         CheckersPiece[][] tmp = cb.getBoard();
+        cb.unlockTurns();
         
         for (int i = 0; i < 8; i++)
         {
@@ -295,7 +303,7 @@ public class TutorialGUI
             }
         }
         boardLayer.add(checkerBoardPanel, Integer.valueOf(1));
-        int layer = 30;
+        int layer = 2;
         for(int y = 0; y<8; y++){
             for(int x = 0; x<8; x++){
                 if(tmp[x][y] != null){
@@ -308,13 +316,12 @@ public class TutorialGUI
             }
         }
         
-        for(int i = 0; i < 24; i++){ //24 = PIECEMAX
+        for(CheckersPiece piece : pieceList){
             CheckersMouseAdapter adap = new CheckersMouseAdapter(
-                        pieceList[i],cb,checkerBoardPanel);
-            pieceList[i].addMouseListener(adap);
-            pieceList[i].addMouseMotionListener(adap);
+                        piece,cb,checkerBoardPanel);
+            piece.addMouseListener(adap);
+            piece.addMouseMotionListener(adap);
         }
-        
     }
     
     private void removePieces(){
@@ -328,64 +335,43 @@ public class TutorialGUI
                 }
             }
         }
+        cb.deleteAllPieces();
     }
     
     private void createWinTutorialBoard(CheckersPiece[][] board){
-        for (int y = 0; y < BOARDEDGE; y++)
-        {
-            for (int x = 0; x < BOARDEDGE; x++)
-            {
-                if (y % 2 == 0)
-                {
-                    if (y < 1)
-                    {
-                        if (x % 2 == 1)
-                        {
+        for (int y = 0; y < BOARDEDGE; y++){
+            for (int x = 0; x < BOARDEDGE; x++){
+                if (y % 2 == 0){
+                    if (y < 1){
+                        if (x % 2 == 1){
                             createPiece(board,x,y,3);
-                        }
-                        else
-                        {
+                        }else{
                             board[x][y] = null;
                         }
                     }
-                    else
-                    {
-                        if (y >= 5)
-                        {
-                            if (x % 2 == 1)
-                            {
+                    else{
+                        if (y >= 5){
+                            if (x % 2 == 1){
                                 createPiece(board,x,y,1);
-                            }
-                            else
-                            {
+                            }else{
                                 board[x][y] = null;
                             }
                         }
                     }
-                }
-                else
-                {
-                    if (y < 1)
-                    {
-                        if (x % 2 == 0)
-                        {
+                }else{
+                    if (y < 1){
+                        if (x % 2 == 0){
                             createPiece(board,x,y,3);
                         }
-                        else
-                        {
+                        else{
                             board[x][y] = null;
                         }
-                    }
-                    else
-                    {
-                        if (y >= 5)
-                        {
-                            if (x % 2 == 0)
-                            {
+                    }else{
+                        if (y >= 5){
+                            if (x % 2 == 0){
                                 createPiece(board,x,y,1);
                             }
-                            else
-                            {
+                            else{
                                 board[x][y] = null;
                             }
                         }

@@ -1,5 +1,6 @@
 package Checkers;
 
+import java.util.ArrayList;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -20,7 +21,7 @@ public class CheckersBoard
     final int P1K = 2;          //Player 1 King
     final int CP2P = 3;         //CPU/Player 2 Piece
     final int CP2K = 4;         //CPU/Player 2 King
-    final CheckersPiece[] pieceList = new CheckersPiece[PIECETOTAL];
+    private ArrayList<CheckersPiece> pieceList = new ArrayList<>();
     private CheckersPiece[][] board = new CheckersPiece[BOARDEDGE][BOARDEDGE];
     private boolean turn = false;
     private int turnsRepeated = 0;
@@ -28,6 +29,7 @@ public class CheckersBoard
     private JLayeredPane display;
     private boolean p1CanJump = false;
     private boolean p2CanJump = false;
+    private boolean lockTurn = false;
     
     
     /**
@@ -66,14 +68,11 @@ public class CheckersBoard
                         {
                             board[x][y] = new CheckersPiece(CP2P, this, x, y, 
                                     boardPanel, display);
-                            pieceList[i] = board[x][y];
-                            i++;
-                            //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
+                            pieceList.add(board[x][y]);
                         }
                         else
                         {
                             board[x][y] = null;
-                            //System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                         }
                     }
                     else
@@ -84,14 +83,11 @@ public class CheckersBoard
                             {
                                 board[x][y] = new CheckersPiece(P1P, this, x, y, 
                                         boardPanel, display);
-                                pieceList[i] = board[x][y];
-                                i++;
-                                //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
+                                pieceList.add(board[x][y]);
                             }
                             else
                             {
                                 board[x][y] = null;
-                               // System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                             }
                         }
                     }
@@ -104,14 +100,11 @@ public class CheckersBoard
                         {
                             board[x][y] = new CheckersPiece(CP2P, this, x, y, 
                                     boardPanel, display);
-                            pieceList[i] = board[x][y];
-                            i++;
-                            //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
+                            pieceList.add(board[x][y]);
                         }
                         else
                         {
                             board[x][y] = null;
-                            //System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                         }
                     }
                     else
@@ -122,49 +115,17 @@ public class CheckersBoard
                             {
                                 board[x][y] = new CheckersPiece(P1P, this, x, y, 
                                         boardPanel, display);
-                                pieceList[i] = board[x][y];
-                                i++;
-                                //System.out.println("position: " + y + "," + x +": "+board[y][x] + " gets a piece");
+                                pieceList.add(board[x][y]);
                             }
                             else
                             {
                                 board[x][y] = null;
-                                //System.out.println("position: " + y + "," + x +": "+board[y][x] + " does not get a piece");
                             }
                         }
                     }
                 }
             }
         }
-    }
-
-    /**
-     * Method move
-     *
-     * Calls the move method within the CheckersPiece object in the selected
-     * square to determine whether to move or jump, and then perform that move.
-     * Additionally, if the current player's turn has been in effect for more
-     * than one move, turnsRepeated will increment.
-     *
-     * @param xi The initial x coordinate of the selected Piece.
-     * @param yi The initial y coordinate of the selected Piece.
-     * @param xdest The x coordinate of the destination for the selected Piece.
-     * @param ydest The y coordinate of the destination for the selected Piece.
-     * @return true if the move action was successful, false otherwise.
-     */
-    public boolean move(int xi, int yi, int xdest, int ydest)
-    {
-        boolean preTurn = turn;
-        boolean result = board[xi][yi].movePiece(xdest, ydest);
-        if (preTurn == turn)
-        {
-            turnsRepeated++;
-        }
-        else
-        {
-            turnsRepeated = 0;
-        }
-        return result;
     }
     
     /**
@@ -187,14 +148,63 @@ public class CheckersBoard
     
     /**
      * Method deletePiece
-     * @param piece 
+     * 
+     * Description: Deletes a piece from the list of pieces
+     * 
+     * @param piece The piece to be removed.
      */
     public void deletePiece(CheckersPiece piece){
-        for(int i = 0; i < pieceList.length; i++){
-            if(pieceList[i] == piece){
-                pieceList[i] = null;
+        pieceList.remove(piece);
+    }
+    
+    /**
+     * Method deleteAllPieces
+     * 
+     * Description: Deletes all the CheckersPieces from the pieceList.
+     */
+    public void deleteAllPieces(){
+        for(int x=0; x<BOARDEDGE; x++){
+            for(int y=0; y<BOARDEDGE; y++){
+                board[x][y] = null;
             }
         }
+        pieceList.clear();
+        turn = false;
+        p1CanJump = false;
+        p2CanJump = false;
+    }
+    
+    /**
+     * Method addPiece
+     * 
+     * Description: Adds a piece, provided by parameter, into the pieceList.
+     * @param piece the piece to be added to the pieceList.
+     */
+    public void addPiece(CheckersPiece piece){
+        pieceList.add(piece);
+    }
+    
+    /**
+     * Method lockTurns
+     * 
+     * Description: Locks the turn boolean so that it doesn't flip when the 
+     * method flipTurn() is called.
+     * 
+     * @param player The player to lock the turns for.
+     */
+    public void lockTurns(boolean player){
+        lockTurn = true;
+        turn = player;
+    }
+    
+    /**
+     * Method unlockTurns
+     * 
+     * Description: Unlocks the turn boolean so that it may flip when the method
+     * flipTurn() is called.
+     */
+    public void unlockTurns(){
+        lockTurn = false;
     }
 
     /**
@@ -224,11 +234,14 @@ public class CheckersBoard
     /**
      * Method flipTurn
      *
-     * Flips the turn boolean.
+     * Description: If the turns aren't locked, it flips the turn boolean.
+     * Otherwise, it doesn't do anything.
      */
     public void flipTurn()
     {
-        turn = !turn;
+        if(!lockTurn){
+            turn = !turn;
+        }
     }
     
     /**
@@ -237,10 +250,11 @@ public class CheckersBoard
      * Description: Flips the p1CanJump or p2CanJump booleans depending on which
      * player is calling this method.
      * 
-     * @param player The player who is calling this method.
+     * @param player    The player who is calling this method.
+     * @param canJump   The value that the player's canJump will be set to.
      */
     public void flipCanJump(boolean player, boolean canJump){
-        if(!player){ //player 1
+        if(!player){ //Player 1
             p1CanJump = canJump;
         }else{
             p2CanJump = canJump;
@@ -278,7 +292,7 @@ public class CheckersBoard
         return turn;
     }
     
-    public CheckersPiece[] getPieceList(){
+    public ArrayList<CheckersPiece> getPieceList(){
         return pieceList;
     }
 }
