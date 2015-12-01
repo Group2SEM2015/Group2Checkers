@@ -22,11 +22,13 @@ public class TutorialGUI
     public JMenuItem step1 = new JMenuItem("Move");
     public JMenuItem step2 = new JMenuItem("Jump");
     public JMenuItem step3 = new JMenuItem("Making a King");
-    public JMenuItem step4 = new JMenuItem("Winning");
+    public JMenuItem step4 = new JMenuItem("Double Jump");
+    public JMenuItem step5 = new JMenuItem("Winning");
     //public JMenuItem steps = new JMenuItem("List of Tutorial steps to come");
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
     public JLayeredPane boardLayer = new JLayeredPane();
+    public final int BOARDEDGE = 8;
     CheckersBoard cb = new CheckersBoard(checkerBoardPanel, boardLayer);
 
     public TutorialGUI()
@@ -40,6 +42,7 @@ public class TutorialGUI
         menu.add(step2);
         menu.add(step3);
         menu.add(step4);
+        menu.add(step5);
         createCheckerBoard(checkerBoardPanel);
 //        addChecker();
 
@@ -97,12 +100,15 @@ public class TutorialGUI
                         + "jump the other players pieces\n"
                         + "Once this is done please go to the\n"
                         + "next step in the tutorial step menu\n");
-                /*
-                CheckersPiece[][] tmp = null;
-                tmp[0][1] = new CheckersPiece(1,cb,0,1,checkerBoardPanel,boardLayer);
+                
+                removePieces();
+                
+                CheckersPiece[][] tmp = new CheckersPiece[8][8];
+                createPiece(tmp, 4, 5, 1);
+                //TODO: Lock win condition
                 cb.setBoard(tmp);
                 boardLayer.repaint();
-                */
+                
             }
         });
 
@@ -128,6 +134,15 @@ public class TutorialGUI
                         + "if the space behind the oppents piece\n"
                         + "However do becareful, you do not want\n"
                         + "to setup your peice to get jump after.");
+                
+                removePieces();
+                
+                CheckersPiece[][] tmp = new CheckersPiece[8][8];
+                createPiece(tmp, 4, 5, 1);
+                createPiece(tmp, 3, 4, 3);
+                //TODO: Lock win condition
+                cb.setBoard(tmp);
+                boardLayer.repaint();
             }
         });
         //switch the boardpanel and text box to the king step
@@ -154,10 +169,36 @@ public class TutorialGUI
                         + "This will allow you to set up new jump\n"
                         + "options and a faster way to bring down your\n"
                         + "oppenet.");
+                
+                removePieces();
+                
+                CheckersPiece[][] tmp = new CheckersPiece[8][8];
+                createPiece(tmp, 4, 1, 1);
+                //TODO: Lock win condition
+                cb.setBoard(tmp);
+                boardLayer.repaint();
 
             }
         });
         step4.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                tips.setText("");
+                removePieces();
+                
+                CheckersPiece[][] tmp = new CheckersPiece[8][8];
+                createPiece(tmp, 4, 5, 1);
+                createPiece(tmp, 3, 4, 3);
+                createPiece(tmp, 1, 2, 3);
+                //TODO: Lock win condition
+                cb.setBoard(tmp);
+                boardLayer.repaint();
+                
+            }
+        });
+        step5.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -172,6 +213,14 @@ public class TutorialGUI
                         + "This is the game of Checkers a critical\n"
                         + "thinking game that makes you think steps\n"
                         + "in advance to assure your WIN!");
+                 removePieces();
+                
+                CheckersPiece[][] tmp = new CheckersPiece[8][8];
+                createWinTutorialBoard(tmp);
+                cb.setBoard(tmp);
+                boardLayer.repaint();
+                
+                
             }
         });
         next.addActionListener(new ActionListener()
@@ -201,6 +250,18 @@ public class TutorialGUI
         });
     }
     
+    private void createPiece(CheckersPiece[][] tmp, int x, int y, int type){
+        tmp[x][y] = new CheckersPiece(type,cb,x,y,checkerBoardPanel,boardLayer);
+        int dx = tmp[x][y].getDrawX();
+        int dy = tmp[x][y].getDrawY();
+        int dfill = tmp[x][y].getDrawFill();
+        tmp[x][y].setBounds(dx,dy,dfill,dfill);
+        CheckersMouseAdapter adap = new CheckersMouseAdapter(
+                tmp[x][y],cb,checkerBoardPanel);
+        tmp[x][y].addMouseListener(adap);
+        tmp[x][y].addMouseMotionListener(adap);
+        boardLayer.add(tmp[x][y],Integer.valueOf(2));
+    }
     public void createCheckerBoard(JPanel checkerBoardPanel)
     {
         int dx,dy, dfill;
@@ -248,12 +309,90 @@ public class TutorialGUI
         }
         
         for(int i = 0; i < 24; i++){ //24 = PIECEMAX
-            CheckersMouseAdapter adap = new CheckersMouseAdapter(pieceList,
-                    cb,i, checkerBoardPanel);
+            CheckersMouseAdapter adap = new CheckersMouseAdapter(
+                        pieceList[i],cb,checkerBoardPanel);
             pieceList[i].addMouseListener(adap);
             pieceList[i].addMouseMotionListener(adap);
         }
         
+    }
+    
+    private void removePieces(){
+        int oppIndex;
+        CheckersPiece[][] pieceBoard = cb.getBoard();
+        for(int x=0; x<8; x++){
+            for(int y=0; y<8; y++){
+                if(pieceBoard[x][y] != null){
+                    oppIndex = boardLayer.getIndexOf(pieceBoard[x][y]);
+                    boardLayer.remove(oppIndex);
+                }
+            }
+        }
+    }
+    
+    private void createWinTutorialBoard(CheckersPiece[][] board){
+        for (int y = 0; y < BOARDEDGE; y++)
+        {
+            for (int x = 0; x < BOARDEDGE; x++)
+            {
+                if (y % 2 == 0)
+                {
+                    if (y < 1)
+                    {
+                        if (x % 2 == 1)
+                        {
+                            createPiece(board,x,y,3);
+                        }
+                        else
+                        {
+                            board[x][y] = null;
+                        }
+                    }
+                    else
+                    {
+                        if (y >= 5)
+                        {
+                            if (x % 2 == 1)
+                            {
+                                createPiece(board,x,y,1);
+                            }
+                            else
+                            {
+                                board[x][y] = null;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (y < 1)
+                    {
+                        if (x % 2 == 0)
+                        {
+                            createPiece(board,x,y,3);
+                        }
+                        else
+                        {
+                            board[x][y] = null;
+                        }
+                    }
+                    else
+                    {
+                        if (y >= 5)
+                        {
+                            if (x % 2 == 0)
+                            {
+                                createPiece(board,x,y,1);
+                            }
+                            else
+                            {
+                                board[x][y] = null;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 /*
     public void addChecker()

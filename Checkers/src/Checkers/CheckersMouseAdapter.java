@@ -14,8 +14,7 @@ import javax.swing.JPanel;
  * @author Samir
  */
 public class CheckersMouseAdapter extends MouseAdapter{
-    private final CheckersPiece[] board;
-    private final int index;
+    private final CheckersPiece piece;
     private final CheckersBoard chkBrd;
     private final JPanel boardPanel;
     private final int BOARDEDGE = 8;
@@ -23,26 +22,23 @@ public class CheckersMouseAdapter extends MouseAdapter{
     
     public CheckersMouseAdapter(){
         chkBrd = null;
-        board = null;
-        index = 0;
+        piece = null;
         boardPanel = null;
         PLAYER = false;
     }
     
-    public CheckersMouseAdapter(CheckersPiece[] board, CheckersBoard chkBrd,
-            int index, JPanel boardPanel){
-        this.board = board;
+    public CheckersMouseAdapter(CheckersPiece piece, CheckersBoard chkBrd,
+            JPanel boardPanel){
+        this.piece = piece;
         this.chkBrd = chkBrd;
-        this.index = index;
         this.boardPanel = boardPanel;
-        this.PLAYER = board[index].getPlayer();
+        this.PLAYER = piece.getPlayer();
     }
     
     @Override
     public void mousePressed(MouseEvent e){
         if(chkBrd.getTurn() == PLAYER){
-            CheckersPiece piece = board[index];
-            board[index].dragFlip();
+            piece.dragFlip();
         }
     }
     
@@ -50,7 +46,6 @@ public class CheckersMouseAdapter extends MouseAdapter{
     @Override
     public void mouseReleased(MouseEvent e){
         if(chkBrd.getTurn() == PLAYER){
-            CheckersPiece piece = board[index];
             int moveX, moveY;
             int x = piece.getDrawX();
             int y = piece.getDrawY();
@@ -76,7 +71,6 @@ public class CheckersMouseAdapter extends MouseAdapter{
     @Override
     public void mouseDragged(MouseEvent e){
         if(chkBrd.getTurn() == PLAYER){
-            CheckersPiece piece = board[index];
             int x = piece.getDrawX();
             int y = piece.getDrawY();
             int offset = piece.getDrawFill()/2;

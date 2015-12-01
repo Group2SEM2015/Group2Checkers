@@ -83,8 +83,8 @@ public class PvEGUI {
         }
         
         for(int i = 0; i < 24; i++){ //24 = PIECEMAX
-            CheckersMouseAdapter adap = new CheckersMouseAdapter(pieceList,
-                    cb,i, checkerBoardPanel);
+            CheckersMouseAdapter adap = new CheckersMouseAdapter(
+                        pieceList[i],cb,checkerBoardPanel);
             pieceList[i].addMouseListener(adap);
             pieceList[i].addMouseMotionListener(adap);
         }
