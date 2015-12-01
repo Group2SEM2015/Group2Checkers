@@ -21,10 +21,13 @@ public class CheckersBoard
     final int P1K = 2;          //Player 1 King
     final int CP2P = 3;         //CPU/Player 2 Piece
     final int CP2K = 4;         //CPU/Player 2 King
+    final int NORMAL_MAX = 12;  //The maximum pieces a player can have normally.
     private ArrayList<CheckersPiece> pieceList = new ArrayList<>();
     private CheckersPiece[][] board = new CheckersPiece[BOARDEDGE][BOARDEDGE];
     private boolean turn = false;
     private int turnsRepeated = 0;
+    private int p1PieceCnt = 0;
+    private int p2PieceCnt = 0;
     private JPanel boardPanel;
     private JLayeredPane display;
     private boolean p1CanJump = false;
@@ -126,6 +129,8 @@ public class CheckersBoard
                 }
             }
         }
+        p1PieceCnt = NORMAL_MAX;
+        p2PieceCnt = NORMAL_MAX;
     }
     
     /**
@@ -149,11 +154,17 @@ public class CheckersBoard
     /**
      * Method deletePiece
      * 
-     * Description: Deletes a piece from the list of pieces
+     * Description: Decrements the appropriate piece counter and deletes a piece
+     * from the list of pieces.
      * 
      * @param piece The piece to be removed.
      */
     public void deletePiece(CheckersPiece piece){
+        if(piece.getPlayer()){
+            p1PieceCnt--;
+        }else{
+            p2PieceCnt--;
+        }
         pieceList.remove(piece);
     }
     
@@ -172,15 +183,24 @@ public class CheckersBoard
         turn = false;
         p1CanJump = false;
         p2CanJump = false;
+        p1PieceCnt = 0;
+        p2PieceCnt = 0;
     }
     
     /**
      * Method addPiece
      * 
-     * Description: Adds a piece, provided by parameter, into the pieceList.
+     * Description: Increments the appropriate piece counter and adds a piece
+     * that's provided by parameter into the pieceList.
+     * 
      * @param piece the piece to be added to the pieceList.
      */
     public void addPiece(CheckersPiece piece){
+        if(piece.getPlayer()){
+            p1PieceCnt++;
+        }else{
+            p2PieceCnt++;
+        }
         pieceList.add(piece);
     }
     
@@ -205,6 +225,33 @@ public class CheckersBoard
      */
     public void unlockTurns(){
         lockTurn = false;
+    }
+    
+    /**
+     * Method getWinner
+     * 
+     * Description: Checks the status of the board and returns a number based
+     * on the results found.
+     * 
+     * @return  0:  The game has not yet finished.
+     *          1:  Player 1 is the winner.
+     *          2:  Player 2 is the winner.
+     *          3:  The game is a draw.
+     */
+    public int checkWinner(){
+        if(p1PieceCnt <= 0 && p2PieceCnt <= 0){
+            System.out.println("Neither players win! They realize friendship is"
+                    + " more important!");
+            return 3;
+        }else if(p1PieceCnt <= 0){
+            System.out.println("Player 1 wins!");
+            return 1;
+        }else if(p2PieceCnt <= 0){
+            System.out.println("Player 2 wins!");
+            return 2;
+        }else{
+            return 0;
+        }
     }
 
     /**

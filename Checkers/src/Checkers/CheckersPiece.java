@@ -92,7 +92,9 @@ public class CheckersPiece extends JPanel
         double distance = moveDistanceLin(x, y, xdest, ydest);
         int piece = board[x][y].getPieceType();
         
-        if(canMove(direction, piece, xdest, ydest) && distance == 1){
+        if(boardControl.checkWinner() > 0){
+            return false;
+        }else if(canMove(direction, piece, xdest, ydest) && distance == 1){
             board[xdest][ydest] = this;
             board[x][y] = null;
             x = xdest;
@@ -106,6 +108,7 @@ public class CheckersPiece extends JPanel
         boardControl.flipTurn();
         boardControl.setBoard(board);
         boardControl.checkJumps();
+        boardControl.checkWinner();
         return true;
     }
     
