@@ -27,13 +27,14 @@ public class TutorialGUI
     public JButton next = new JButton("Next");
     public JButton previous = new JButton("Previous");
     public JLayeredPane boardLayer = new JLayeredPane();
+    CheckersBoard cb = new CheckersBoard(checkerBoardPanel, boardLayer);
 
     public TutorialGUI()
     {
         tutorial.setSize(900, 700);
         tutorial.setVisible(true);
         tutorial.setLayout(new BorderLayout());
-
+      
         menuBar.add(menu);
         menu.add(step1);
         menu.add(step2);
@@ -80,9 +81,7 @@ public class TutorialGUI
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                for(int i = 0; i < 12; i++){
-                boardLayer.remove(0);
-                }
+                
                 tips.setText("In this step you will learn the\n"
                         + "basic move function this allows you         \n"
                         + "move your checker piece(Yellow) to\n"
@@ -98,8 +97,12 @@ public class TutorialGUI
                         + "jump the other players pieces\n"
                         + "Once this is done please go to the\n"
                         + "next step in the tutorial step menu\n");
-               
-                
+                /*
+                CheckersPiece[][] tmp = null;
+                tmp[0][1] = new CheckersPiece(1,cb,0,1,checkerBoardPanel,boardLayer);
+                cb.setBoard(tmp);
+                boardLayer.repaint();
+                */
             }
         });
 
@@ -204,7 +207,6 @@ public class TutorialGUI
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
         checkerBoardPanel.setSize(650, 612);
-        CheckersBoard cb = new CheckersBoard(checkerBoardPanel, boardLayer);
         final CheckersPiece[] pieceList = cb.getPieceList();
         CheckersPiece[][] tmp = cb.getBoard();
         
