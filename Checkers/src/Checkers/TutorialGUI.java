@@ -106,6 +106,7 @@ public class TutorialGUI
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createPiece(tmp, 4, 5, 1);
                 //TODO: Lock win condition
+                cb.newAi();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
@@ -142,6 +143,7 @@ public class TutorialGUI
                 createPiece(tmp, 4, 5, 1);
                 createPiece(tmp, 3, 4, 3);
                 //TODO: Lock win condition
+                cb.newAi();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
@@ -177,6 +179,7 @@ public class TutorialGUI
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createPiece(tmp, 4, 1, 1);
                 //TODO: Lock win condition
+                cb.newAi();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
@@ -196,6 +199,7 @@ public class TutorialGUI
                 createPiece(tmp, 3, 4, 3);
                 createPiece(tmp, 1, 2, 3);
                 //TODO: Lock win condition
+                cb.newAi();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
@@ -221,6 +225,7 @@ public class TutorialGUI
                 
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createWinTutorialBoard(tmp);
+                cb.newAi();
                 cb.setBoard(tmp);
                 cb.unlockTurns();
                 boardLayer.repaint();
@@ -228,11 +233,12 @@ public class TutorialGUI
                 
             }
         });
+        
         next.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-
+                
             }
         });
         
@@ -240,8 +246,6 @@ public class TutorialGUI
             public void mousePressed(MouseEvent e){
                 int x = e.getX();
                 int y = e.getY();
-                System.out.println(x);
-                System.out.println(y);
                 
             }
         });
@@ -249,8 +253,6 @@ public class TutorialGUI
             public void mouseDragged(MouseEvent e){
                 int x = e.getX();
                 int y = e.getY();
-               // System.out.println(x);
-                //System.out.println(y);
             }
         });
     }
@@ -278,6 +280,7 @@ public class TutorialGUI
         ArrayList<CheckersPiece> pieceList = cb.getPieceList();
         CheckersPiece[][] tmp = cb.getBoard();
         cb.unlockTurns();
+        cb.newAi();
         
         for (int i = 0; i < 8; i++)
         {

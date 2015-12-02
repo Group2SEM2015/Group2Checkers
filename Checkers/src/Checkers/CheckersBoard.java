@@ -24,6 +24,7 @@ public class CheckersBoard
     final int NORMAL_MAX = 12;  //The maximum pieces a player can have normally.
     private ArrayList<CheckersPiece> pieceList = new ArrayList<>();
     private CheckersPiece[][] board = new CheckersPiece[BOARDEDGE][BOARDEDGE];
+    private CheckersAI ai;
     private boolean turn = false;
     private int turnsRepeated = 0;
     private int p1PieceCnt = 0;
@@ -137,6 +138,26 @@ public class CheckersBoard
     }
     
     /**
+     * Method newAi
+     * 
+     * Description: Makes a new ai to take control of the white pieces on the
+     * board.
+     */
+    public void newAi(){
+        ai = new CheckersAI(this);
+    }
+    
+    /**
+     * Method turnAiOff
+     * 
+     * Description: Makes the ai null to remove control of the white pieces on
+     * the board from the ai.
+     */
+    public void turnAiOff(){
+        ai = null;
+    }
+    
+    /**
      * Method checkJumps
      * 
      * Description: Called by the pieces after they move to see if any piece
@@ -169,6 +190,9 @@ public class CheckersBoard
             p2PieceCnt--;
         }
         pieceList.remove(piece);
+        if(ai != null && piece.getPlayer()){
+            ai.removePiece(piece);
+        }
     }
     
     /**
@@ -207,6 +231,13 @@ public class CheckersBoard
             p2PieceCnt++;
         }
         pieceList.add(piece);
+    }
+    
+    public void aiTurn(){
+        boolean test = ai != null;
+        if(ai != null && turn){
+            ai.makeMove();
+        }
     }
     
     /**
@@ -274,15 +305,14 @@ public class CheckersBoard
                 if(!piece.getPlayer()){
                     p1HasMove = true;
                 }else{
-                    System.out.println("Piece in "+piece.getX()+":"+piece.getY()+" has set p2HasMove to true.");
                     p2HasMove = true;
                 }
             }
         }
-        if(!p1HasMove){
-            System.out.println("Player 1 does not have a legal move.");
-        }else if(!p2HasMove){
-            System.out.println("Player 2 does not have a legal move.");
+        if(!p1HasMove && p1PieceCnt > 0){
+            System.out.println("Player 1 does not have a legal move."+p1PieceCnt);
+        }else if(!p2HasMove && p2PieceCnt > 0){
+            System.out.println("Player 2 does not have a legal move."+p2PieceCnt);
         }
     }
 

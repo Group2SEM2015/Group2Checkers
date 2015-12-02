@@ -11,10 +11,20 @@ public class CheckersPiece extends JPanel
     private int px, py; //Used for the x and y locations of the paint method
     private int pfill;  //Used for the fill width and height of Oval
     private int kingFill;
+    private int cpuxi = 0;
+    private int cpuyi = 0;
+    private int cpuxf = 0;
+    private int cpuyf = 0;
+    private int cpuDestx = 0;
+    private int cpuDesty = 0;
+    private int cpuxInc = 1;
+    private int cpuyInc = 1;
     private CheckersPiece[][] board;
     private CheckersBoard boardControl;
     private JPanel boardPanel;
     private boolean drag = false;
+    private boolean ai = false;
+    private boolean cpuDraw = false;
     private JLayeredPane display;
 
     final boolean PLAYER;
@@ -110,6 +120,7 @@ public class CheckersPiece extends JPanel
         boardControl.setBoard(board);
         boardControl.checkJumps();
         boardControl.checkWinner();
+        boardControl.aiTurn();
         return true;
     }
     
@@ -242,7 +253,7 @@ public class CheckersPiece extends JPanel
      * @param ydest the y position of the destination.
      * @return true if both statements are true, false otherwise.
      */
-    private boolean canMove(int direction, int xdest, int ydest){
+    public boolean canMove(int direction, int xdest, int ydest){
         if(xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE){
             return false;
         }
@@ -261,13 +272,11 @@ public class CheckersPiece extends JPanel
      * @return true if the piece can move, false otherwise.
      */
     public boolean hasMoveOption(){
-        System.out.println("Piece in "+x+":"+y+" for "+ PLAYER);
         if(canMove(NW, x-1, y-1) || canMove(NE, x+1,y-1) 
                 || canMove(SE, x+1, y+1)
                 || canMove(SW, x-1, y+1)){
             return true;
         }else{
-            System.out.println();
             return false;
         }
     }
@@ -320,14 +329,13 @@ public class CheckersPiece extends JPanel
      * @param ydest The final y position of the acting piece.
      * @return True if a jump can be performed, false otherwise.
      */
-    private boolean canJump(int xdest, int ydest)
+    public boolean canJump(int xdest, int ydest)
     {
         int piece = board[x][y].getPieceType();
         int direction = determineDirection(x, y, xdest, ydest);
         
         if (xdest < 0 || xdest >= BOARDEDGE || ydest < 0 || ydest >= BOARDEDGE
                 || board[xdest][ydest] != null || !canDir(direction, piece)){
-            //System.out.println("Failing");
             return false;
         }
 
@@ -420,7 +428,7 @@ public class CheckersPiece extends JPanel
      * @param ydest The y destination of the Checker piece.
      * @return
      */
-    private int determineDirection(int xi, int yi, int xdest, int ydest)
+    public int determineDirection(int xi, int yi, int xdest, int ydest)
     {
         if (xi > xdest)
         {
@@ -481,6 +489,39 @@ public class CheckersPiece extends JPanel
     }
     
     /**
+     * Method hasJumpExternal
+     * 
+     * Description: Sets the inner board to the CheckersBoard class's board,
+     * then checks if the piece can jump.
+     * 
+     * @return true if the piece can jump, false otherwise.
+     */
+    public boolean hasJumpExternal(){
+        board = boardControl.getBoard();
+        if(hasJumpOption()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    /**
+     * Method hasMoveExternal
+     * 
+     * Description: Sets the inner board to the CheckersBoard class's board,
+     * then checks if the piece can make a regular move.
+     * @return 
+     */
+    public boolean hasMoveExternal(){
+        board = boardControl.getBoard();
+        if(hasMoveOption()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    /**
      * Method checkMovesExternal
      * 
      * Description: Checks to see if the piece can move or jump in any
@@ -490,9 +531,7 @@ public class CheckersPiece extends JPanel
      */
     public boolean checkMovesExternal(){
         board = boardControl.getBoard();
-        System.out.println("Check for "+PLAYER +" "+pieceType);
         if(hasMoveOption() || hasJumpOption()){
-            //System.out.println("Piece in "+x+":"+y+" has a move or jump for player "+PLAYER);
             return true;
         }else{
             return false;
@@ -525,8 +564,18 @@ public class CheckersPiece extends JPanel
             theColor = Color.WHITE;
         }
         setOpaque(false);
-        if(!drag){
+        if(!drag || !cpuDraw){
             calculatePosition();
+        }else if(cpuDraw){
+            cpuxi+= cpuxInc;
+            System.out.println("Moving?" + cpuxi);
+            cpuyi+= cpuyInc;
+            if(cpuxi == cpuxf && cpuyi == cpuyf){
+                movePiece(cpuDestx, cpuDesty);
+                cpuDraw = false;
+            }
+            px = cpuxi;
+            py = cpuyi;
         }
         setLocation(px,py);
         g.setColor(theColor);
@@ -539,6 +588,41 @@ public class CheckersPiece extends JPanel
             }
             kingFill = pfill-(KING_OFFSET * 2);
             g.fillOval(KING_OFFSET, KING_OFFSET, kingFill, kingFill);
+        }
+    }
+    
+    public void setCpuDraw(boolean setting){
+        cpuDraw = setting;
+    }
+    
+    public void setCpuDrawSettings(int xi, int yi, int xf, int yf, int xInc, 
+            int yInc, int dx, int dy){
+        cpuxi = xi;
+        cpuyi = yi;
+        cpuxf = xf;
+        cpuyf = yf;
+        cpuxInc = directionModX(xInc, xi, yi, xf, yf);
+        cpuyInc = directionModY(yInc, xi, yi, xf, yf);
+        cpuDestx = dx;
+        cpuDesty = dy;
+        System.out.println("Gets this far "+cpuDraw);
+    }
+    
+    private int directionModX(int incX, int x, int y, int xf, int yf){
+        int dir = determineDirection(x,y,xf,yf);
+        if(dir == NW || dir == SW){
+            return -incX;
+        }else{
+            return incX;
+        }
+    }
+    
+    private int directionModY(int incY, int x, int y, int xf, int yf){
+        int dir = determineDirection(x,y,xf,yf);
+        if(dir <= NE){
+            return -incY;
+        }else{
+            return incY;
         }
     }
     
@@ -590,5 +674,21 @@ public class CheckersPiece extends JPanel
     public boolean dragFlip(){
         drag = !drag;
         return drag;
+    }
+    
+    public int getBoardX(){
+        return x;
+    }
+    
+    public int getBoardY(){
+        return y;
+    }
+    
+    public boolean getAi(){
+        return ai;
+    }
+    
+    public void flipAi(){
+        ai = !ai;
     }
 }

@@ -37,7 +37,7 @@ public class CheckersMouseAdapter extends MouseAdapter{
     
     @Override
     public void mousePressed(MouseEvent e){
-        if(chkBrd.getTurn() == PLAYER){
+        if(chkBrd.getTurn() == PLAYER && piece.getAi() == false){
             piece.dragFlip();
         }
     }
@@ -45,7 +45,7 @@ public class CheckersMouseAdapter extends MouseAdapter{
     
     @Override
     public void mouseReleased(MouseEvent e){
-        if(chkBrd.getTurn() == PLAYER){
+        if(chkBrd.getTurn() == PLAYER && piece.getAi() == false){
             int moveX, moveY;
             int x = piece.getDrawX();
             int y = piece.getDrawY();
@@ -70,7 +70,7 @@ public class CheckersMouseAdapter extends MouseAdapter{
     
     @Override
     public void mouseDragged(MouseEvent e){
-        if(chkBrd.getTurn() == PLAYER){
+        if(chkBrd.getTurn() == PLAYER && piece.getAi() == false){
             int x = piece.getDrawX();
             int y = piece.getDrawY();
             int offset = piece.getDrawFill()/2;
