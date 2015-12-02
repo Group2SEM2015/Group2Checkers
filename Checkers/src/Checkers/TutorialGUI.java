@@ -21,8 +21,8 @@ public class TutorialGUI
     public JMenu menu = new JMenu("Tutorial Steps");
     public JMenuItem step1 = new JMenuItem("Move");
     public JMenuItem step2 = new JMenuItem("Jump");
-    public JMenuItem step3 = new JMenuItem("Making a King");
-    public JMenuItem step4 = new JMenuItem("Double Jump");
+    public JMenuItem step3 = new JMenuItem("Double Jump");
+    public JMenuItem step4 = new JMenuItem("Making a King");
     public JMenuItem step5 = new JMenuItem("Winning");
     //public JMenuItem steps = new JMenuItem("List of Tutorial steps to come");
     public JButton next = new JButton("Next");
@@ -50,9 +50,9 @@ public class TutorialGUI
         tutorial.add(boardLayer, BorderLayout.CENTER);
         tutorial.add(tips, BorderLayout.WEST);
         buttonPanel.setLayout(new GridLayout(1, 2));
-        tutorial.add(buttonPanel, BorderLayout.SOUTH);
-        buttonPanel.add(previous);
-        buttonPanel.add(next);
+        //tutorial.add(buttonPanel, BorderLayout.SOUTH);
+        //buttonPanel.add(previous);
+        //buttonPanel.add(next);
         tutorial.add(menuBar, BorderLayout.NORTH);
         
         System.out.println(checkerBoardPanel.getSize());
@@ -127,9 +127,10 @@ public class TutorialGUI
                         + "player to take his/hers oppenets\n"
                         + "piece. To demostrate this we have set   \n"
                         + "up the board that allows you jump your\n"
-                        + "oppenet. Please select the highlighted\n"
+                        + "oppenet. Please select the Yellow\n"
                         + "checker piece. And move the checker\n"
-                        + "piece to the highighted square.\n"
+                        + "piece to the avialble square on the\n"
+                        + "other side of your white piece.\n"
                         + "As you can see with the jump you\n"
                         + "are able to move over the oppenets\n"
                         + "piece and take it. You can only do this\n"
@@ -155,6 +156,35 @@ public class TutorialGUI
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                tips.setText("In the step you will leatn the\n"
+                        + "the double jump. This is a jump where\n"
+                        + "you are able to take two of your oppents\n"
+                        + "peices in one turn. We have set up the\n"
+                        + "board to give you the opportunity to\n"
+                        + "do so. Take your piece and drag it over\n"
+                        + "the first piece like you did in the jump\n"
+                        + "that piece will be taken, however your\n"
+                        + "will not end. This allows you to make\n"
+                        + "the next jump. Thus making two jumps in\n"
+                        + "one turn.");
+                removePieces();
+                
+                CheckersPiece[][] tmp = new CheckersPiece[8][8];
+                createPiece(tmp, 4, 5, 1);
+                createPiece(tmp, 3, 4, 3);
+                createPiece(tmp, 1, 2, 3);
+                //TODO: Lock win condition
+                cb.newAi();
+                cb.setBoard(tmp);
+                cb.lockTurns(PLAYER_ONE);
+                boardLayer.repaint();
+            }
+        });
+        step4.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
                 tips.setText("In this step you will learn what\n"
                         + "a king is and what you can do with\n"
                         + "one. The king is a checker peice that\n"
@@ -164,8 +194,8 @@ public class TutorialGUI
                         + "the end. This allows the checker piece to\n"
                         + "move in any forward or back.\n"
                         + "This piece can dominate the field.\n"
-                        + "Please select the higlighted piece and\n"
-                        + "drag it to the highlighted box. As you\n"
+                        + "Please select the yellow piece and\n"
+                        + "drag it to the the black square. As you\n"
                         + "can see the piece has changed.\n"
                         + "Now move the peice to the previos spot\n"
                         + "you where just at.\n"
@@ -183,26 +213,7 @@ public class TutorialGUI
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
-
-            }
-        });
-        step4.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                tips.setText("");
-                removePieces();
                 
-                CheckersPiece[][] tmp = new CheckersPiece[8][8];
-                createPiece(tmp, 4, 5, 1);
-                createPiece(tmp, 3, 4, 3);
-                createPiece(tmp, 1, 2, 3);
-                //TODO: Lock win condition
-                cb.newAi();
-                cb.setBoard(tmp);
-                cb.lockTurns(PLAYER_ONE);
-                boardLayer.repaint();
                 
             }
         });
@@ -233,28 +244,7 @@ public class TutorialGUI
                 
             }
         });
-        
-        next.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                
-            }
-        });
-        
-        checkerBoardPanel.addMouseListener(new MouseAdapter(){
-            public void mousePressed(MouseEvent e){
-                int x = e.getX();
-                int y = e.getY();
-                
-            }
-        });
-        checkerBoardPanel.addMouseMotionListener(new MouseMotionAdapter(){
-            public void mouseDragged(MouseEvent e){
-                int x = e.getX();
-                int y = e.getY();
-            }
-        });
+
     }
     
     private void createPiece(CheckersPiece[][] board, int x, int y, int type){
@@ -276,7 +266,7 @@ public class TutorialGUI
         int dx,dy, dfill;
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
-        checkerBoardPanel.setSize(650, 612);
+        checkerBoardPanel.setSize(650, 630);
         ArrayList<CheckersPiece> pieceList = cb.getPieceList();
         CheckersPiece[][] tmp = cb.getBoard();
         cb.unlockTurns();
