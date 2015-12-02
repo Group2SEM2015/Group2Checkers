@@ -105,8 +105,8 @@ public class TutorialGUI
                 
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createPiece(tmp, 4, 5, 1);
-                //TODO: Lock win condition
                 cb.newAi();
+                cb.lockWin();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
@@ -143,8 +143,8 @@ public class TutorialGUI
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createPiece(tmp, 4, 5, 1);
                 createPiece(tmp, 3, 4, 3);
-                //TODO: Lock win condition
                 cb.newAi();
+                cb.lockWin();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
                 boardLayer.repaint();
@@ -173,7 +173,7 @@ public class TutorialGUI
                 createPiece(tmp, 4, 5, 1);
                 createPiece(tmp, 3, 4, 3);
                 createPiece(tmp, 1, 2, 3);
-                //TODO: Lock win condition
+                cb.lockWin();
                 cb.newAi();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
@@ -208,7 +208,7 @@ public class TutorialGUI
                 
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createPiece(tmp, 4, 1, 1);
-                //TODO: Lock win condition
+                cb.lockWin();
                 cb.newAi();
                 cb.setBoard(tmp);
                 cb.lockTurns(PLAYER_ONE);
@@ -236,6 +236,7 @@ public class TutorialGUI
                 
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createWinTutorialBoard(tmp);
+                cb.unlockWin();
                 cb.newAi();
                 cb.setBoard(tmp);
                 cb.unlockTurns();

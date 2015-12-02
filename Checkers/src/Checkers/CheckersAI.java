@@ -2,6 +2,7 @@ package Checkers;
 
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JLayeredPane;
 
 /**
  *
@@ -20,23 +21,25 @@ public class CheckersAI {
     final int SW = 4;
     final int BOARDEDGE = 8;
     final int BOARD_WIDTH = 650;
-    final int BOARD_HEIGHT = 612;
+    final int BOARD_HEIGHT = 630;
     final int OFFSET = 10;
     final int DRAW_INC = 1;
     CheckersBoard board;
     CheckersPiece jumpLock;
+    JLayeredPane display;
     ArrayList<CheckersPiece> cpuPieces;
     ArrayList<moveNode> moves;
     ArrayList<moveNode> jumps;
     Random rng;
     
-    public CheckersAI(CheckersBoard board){
+    public CheckersAI(CheckersBoard board, JLayeredPane display){
         this.board = board;
         cpuPieces = new ArrayList<>();
         calculatePieces();
         moves = new ArrayList<>();
         jumps = new ArrayList<>();
         rng = new Random();
+        this.display = display;
     }
     
     public void removePiece(CheckersPiece piece){
@@ -61,20 +64,22 @@ public class CheckersAI {
     }
     
     private void calculateJumps(){
+        jumps.clear();
         for(CheckersPiece piece : cpuPieces){
             if(piece.hasJumpExternal()){
-                if(jumpLock != null){
+                //if(jumpLock != null){
                     addJumps(piece);
-                }else{
-                    if(jumpLock == piece){
-                        addJumps(piece);
-                    }
-                }
+                //}else{
+                    //if(jumpLock == piece){
+                        //addJumps(piece);
+                    //}
+                //}
             }
         }
     }
     
     private void calculateMoves(){
+        moves.clear();
         for(CheckersPiece piece : cpuPieces){
             if(piece.hasMoveExternal()){
                 addMoves(piece);
@@ -170,6 +175,7 @@ public class CheckersAI {
             //        movePair.destX, movePair.destY);            
             piece.movePiece(movePair.destX, movePair.destY);
             System.out.println("Jump performed");
+            display.repaint();
             if(piece.hasJumpExternal()){
                 jumpLock = piece;
             }else{
@@ -185,6 +191,7 @@ public class CheckersAI {
             xf = convertX(movePair.destX);
             yf = convertY(movePair.destY);
             piece.movePiece(movePair.destX, movePair.destY);
+            display.repaint();
             //piece.setCpuDrawSettings(xi, yi, xf, yf,DRAW_INC, DRAW_INC,
             //        movePair.destX, movePair.destY);
         }

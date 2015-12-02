@@ -36,6 +36,7 @@ public class CheckersBoard
     private boolean lockTurn = false;
     private boolean p1HasMove = true;
     private boolean p2HasMove = true;
+    private boolean winUnlocked = true;
     
     
     
@@ -144,7 +145,7 @@ public class CheckersBoard
      * board.
      */
     public void newAi(){
-        ai = new CheckersAI(this);
+        ai = new CheckersAI(this, display);
     }
     
     /**
@@ -275,20 +276,21 @@ public class CheckersBoard
      *          3:  The game is a draw.
      */
     public int checkWinner(){
-        checkStalemate();
-        if(p1PieceCnt <= 0 && p2PieceCnt <= 0){
-            System.out.println("Neither players win! They realize friendship is"
-                    + " more important!");
-            return 3;
-        }else if(p1PieceCnt <= 0 || !p2HasMove){
-            System.out.println("Player 1 wins!");
-            return 1;
-        }else if(p2PieceCnt <= 0 || !p1HasMove){
-            System.out.println("Player 2 wins!");
-            return 2;
-        }else{
-            return 0;
+        if(winUnlocked){
+            checkStalemate();
+            if(p1PieceCnt <= 0 && p2PieceCnt <= 0){
+                System.out.println("Neither players win! They realize friendship is"
+                        + " more important!");
+                return 3;
+            }else if(p1PieceCnt <= 0 || !p2HasMove){
+                System.out.println("Player 1 wins!");
+                return 1;
+            }else if(p2PieceCnt <= 0 || !p1HasMove){
+                System.out.println("Player 2 wins!");
+                return 2;
+            }
         }
+        return 0;
     }
     
     /**
@@ -399,6 +401,14 @@ public class CheckersBoard
     public boolean getTurn()
     {
         return turn;
+    }
+    
+    public void lockWin(){
+        winUnlocked = false;
+    }
+    
+    public void unlockWin(){
+        winUnlocked = true;
     }
     
     public ArrayList<CheckersPiece> getPieceList(){

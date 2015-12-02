@@ -100,6 +100,7 @@ public class CheckersPiece extends JPanel
 
         int direction = determineDirection(x, y, xdest, ydest);
         double distance = moveDistanceLin(x, y, xdest, ydest);
+        System.err.println(x+":"+y+" Type: "+pieceType);
         int piece = board[x][y].getPieceType();
         boolean turn = boardControl.getTurn() == PLAYER;
         

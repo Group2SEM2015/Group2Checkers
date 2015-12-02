@@ -40,7 +40,7 @@ public class PvPGUI {
         int dx,dy, dfill;
         checkerBoard1 = new JPanel[8][8];
         checkerBoardPanel.setLayout(new GridLayout(8, 8));
-        checkerBoardPanel.setSize(650, 612);
+        checkerBoardPanel.setSize(650, 630);
         CheckersBoard cb = new CheckersBoard(checkerBoardPanel, boardLayer);
         ArrayList<CheckersPiece> pieceList = cb.getPieceList();
         CheckersPiece[][] tmp = cb.getBoard();
