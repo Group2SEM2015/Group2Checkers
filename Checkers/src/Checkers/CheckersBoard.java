@@ -185,7 +185,7 @@ public class CheckersBoard
      * @param piece The piece to be removed.
      */
     public void deletePiece(CheckersPiece piece){
-        if(piece.getPlayer()){
+        if(!piece.getPlayer()){
             p1PieceCnt--;
         }else{
             p2PieceCnt--;
@@ -275,9 +275,9 @@ public class CheckersBoard
      *          2:  Player 2 is the winner.
      *          3:  The game is a draw.
      */
-    public int checkWinner(){
+    public int checkWinner(boolean player){
         if(winUnlocked){
-            checkStalemate();
+            checkStalemate(player);
             if(p1PieceCnt <= 0 && p2PieceCnt <= 0){
                 System.out.println("Neither players win! They realize friendship is"
                         + " more important!");
@@ -299,7 +299,7 @@ public class CheckersBoard
      * Description: Checks the state of the game to see if either player can
      * move. If one player can't make a legal move, their opponent wins.
      */
-    public void checkStalemate(){
+    public void checkStalemate(boolean player){
         p1HasMove = false;
         p2HasMove = false;
         for(CheckersPiece piece : pieceList){
@@ -311,10 +311,10 @@ public class CheckersBoard
                 }
             }
         }
-        if(!p1HasMove && p1PieceCnt > 0){
-            System.out.println("Player 1 does not have a legal move."+p1PieceCnt);
-        }else if(!p2HasMove && p2PieceCnt > 0){
-            System.out.println("Player 2 does not have a legal move."+p2PieceCnt);
+        if(!p1HasMove && p1PieceCnt > 0 && !player){
+            System.out.println("Player 1 does not have a legal move.");
+        }else if(!p2HasMove && p2PieceCnt > 0 && player){
+            System.out.println("Player 2 does not have a legal move.");
         }
     }
 

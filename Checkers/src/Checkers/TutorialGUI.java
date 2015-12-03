@@ -172,7 +172,7 @@ public class TutorialGUI
                 CheckersPiece[][] tmp = new CheckersPiece[8][8];
                 createPiece(tmp, 4, 5, 1);
                 createPiece(tmp, 3, 4, 3);
-                createPiece(tmp, 1, 2, 3);
+                createPiece(tmp, 3, 2, 3);
                 cb.lockWin();
                 cb.newAi();
                 cb.setBoard(tmp);
@@ -316,6 +316,7 @@ public class TutorialGUI
             piece.addMouseListener(adap);
             piece.addMouseMotionListener(adap);
         }
+        removePieces();
     }
     
     private void removePieces(){
