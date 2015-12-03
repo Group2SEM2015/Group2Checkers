@@ -171,11 +171,10 @@ public class CheckersAI {
             //piece.setCpuDraw(true);
             xf = convertX(movePair.destX);
             yf = convertY(movePair.destY);
-            //piece.setCpuDrawSettings(xi, yi, xf, yf,DRAW_INC, DRAW_INC,
-            //        movePair.destX, movePair.destY);            
-            piece.movePiece(movePair.destX, movePair.destY);
-            System.out.println("Jump performed");
-            display.repaint();
+            piece.setCpuDrawSettings(xi, yi, xf, yf,DRAW_INC, DRAW_INC,
+                    movePair.destX, movePair.destY);            
+            //piece.movePiece(movePair.destX, movePair.destY);
+            //display.repaint();
             if(piece.hasJumpExternal()){
                 jumpLock = piece;
             }else{
@@ -190,10 +189,10 @@ public class CheckersAI {
             //piece.setCpuDraw(true);
             xf = convertX(movePair.destX);
             yf = convertY(movePair.destY);
-            piece.movePiece(movePair.destX, movePair.destY);
-            display.repaint();
-            //piece.setCpuDrawSettings(xi, yi, xf, yf,DRAW_INC, DRAW_INC,
-            //        movePair.destX, movePair.destY);
+            //piece.movePiece(movePair.destX, movePair.destY);
+            //display.repaint();
+            piece.setCpuDrawSettings(xi, yi, xf, yf,DRAW_INC, DRAW_INC,
+                    movePair.destX, movePair.destY);
         }
     }
     

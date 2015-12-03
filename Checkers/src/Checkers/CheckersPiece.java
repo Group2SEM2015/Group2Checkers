@@ -2,6 +2,8 @@ package Checkers;
 
 import java.awt.*;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class CheckersPiece extends JPanel
@@ -26,6 +28,9 @@ public class CheckersPiece extends JPanel
     private boolean ai = false;
     private boolean cpuDraw = false;
     private JLayeredPane display;
+    private ActionListener animation;
+    private Timer animationTimer;
+    private Timer blinkTimer;
 
     final boolean PLAYER;
     final int BOARDEDGE = 8;
@@ -39,6 +44,8 @@ public class CheckersPiece extends JPanel
     final int CP2K = 4;     //CPU/Player 2 King
     final int OFFSET = 10;
     final int KING_OFFSET = 10;
+    final int ANIMA_DELAY = 1;
+    final int BLINK_DELAY = 500;
     final Color P1KCOLOR = new Color(255,165,0);
     final Color CP2KCOLOR = new Color(140,140,140);
     final Color NAVY = new Color(22,145,217); //Navy Blue
@@ -104,7 +111,7 @@ public class CheckersPiece extends JPanel
         int piece = board[x][y].getPieceType();
         boolean turn = boardControl.getTurn() == PLAYER;
         
-        if(boardControl.checkWinner() > 0 && turn){
+        if(boardControl.checkWinner(PLAYER) > 0 && turn){
             return false;
         }else if(canMove(direction, xdest, ydest) && distance == 1){
             board[xdest][ydest] = this;
@@ -120,7 +127,7 @@ public class CheckersPiece extends JPanel
         boardControl.flipTurn();
         boardControl.setBoard(board);
         boardControl.checkJumps();
-        boardControl.checkWinner();
+        boardControl.checkWinner(PLAYER);
         boardControl.aiTurn();
         return true;
     }
@@ -567,18 +574,10 @@ public class CheckersPiece extends JPanel
         setOpaque(false);
         if(!drag || !cpuDraw){
             calculatePosition();
-        }else if(cpuDraw){
-            cpuxi+= cpuxInc;
-            System.out.println("Moving?" + cpuxi);
-            cpuyi+= cpuyInc;
-            if(cpuxi == cpuxf && cpuyi == cpuyf){
-                movePiece(cpuDestx, cpuDesty);
-                cpuDraw = false;
-            }
-            px = cpuxi;
-            py = cpuyi;
         }
-        setLocation(px,py);
+        if(!cpuDraw){
+            setLocation(px,py);
+        }
         g.setColor(theColor);
         g.fillOval(0, 0, pfill, pfill);
         if(pieceType == P1K || pieceType == CP2K){
@@ -598,6 +597,7 @@ public class CheckersPiece extends JPanel
     
     public void setCpuDrawSettings(int xi, int yi, int xf, int yf, int xInc, 
             int yInc, int dx, int dy){
+        cpuDraw = true;
         cpuxi = xi;
         cpuyi = yi;
         cpuxf = xf;
@@ -606,7 +606,60 @@ public class CheckersPiece extends JPanel
         cpuyInc = directionModY(yInc, xi, yi, xf, yf);
         cpuDestx = dx;
         cpuDesty = dy;
-        System.out.println("Gets this far "+cpuDraw);
+        animation = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent evt){
+                if(!determineStop()){
+                cpuDraw = true;
+                cpuxi+= cpuxInc;
+                System.out.println("Moving? " + cpuyi + " "+cpuyf);
+                cpuyi+= cpuyInc;
+                }else{
+                    movePiece(cpuDestx, cpuDesty);
+                    cpuDraw = false;
+                    animationTimer.stop();
+                }
+                px = cpuxi;
+                py = cpuyi;
+                setLocation(px,py);
+                display.repaint();
+            }
+        };
+        if(animationTimer != null && animationTimer.isRunning()){
+            animationTimer.stop();
+            movePiece(dx,dy);
+        }else{
+            animationTimer = new Timer(ANIMA_DELAY, animation);
+            animationTimer.start();
+        }
+    }
+    
+    private boolean determineStop(){
+        int direction = determineDirection(cpuxi,cpuyi,cpuxf,cpuyf);
+        switch(direction){
+            case NW:
+                if(cpuxi <= cpuxf || cpuyi <= cpuyf){
+                    return true;
+                }
+                break;
+            case NE:
+                if(cpuxi >= cpuxf || cpuyi <= cpuyf){
+                    return true;
+                }
+                break;
+            case SE:
+                if(cpuxi >= cpuxf || cpuyi >= cpuyf){
+                    return true;
+                }
+                break;
+            case SW:
+                if(cpuxi <= cpuxf || cpuyi >= cpuyf){
+                    return true;
+                }
+                break;
+            default:
+        }
+        return false;
     }
     
     private int directionModX(int incX, int x, int y, int xf, int yf){
