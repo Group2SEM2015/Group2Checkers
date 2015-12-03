@@ -14,7 +14,7 @@ public class PvEGUI {
     public JLayeredPane boardLayer = new JLayeredPane();
     public PvEGUI(){
         pveGUI = new JFrame("Player Vs. Computer");
-        pveGUI.setSize(665,655);
+        pveGUI.setSize(665,670);
         pveGUI.setVisible(true);
         //sets image to JLabel
         //ImageIcon icon = new ImageIcon(new ImageIcon("Images/checkers_board.png").getImage().getScaledInstance(700, 600, Image.SCALE_DEFAULT));
